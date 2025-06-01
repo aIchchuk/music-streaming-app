@@ -34,6 +34,7 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        toolbarHeight: 48, // 👈 Reduce height here (default is 56)
         leading: IconButton(
           icon: const Icon(Icons.logout, color: Colors.white),
           onPressed: () {
@@ -49,6 +50,7 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
         ),
         centerTitle: true,
       ),
+
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         items: const [

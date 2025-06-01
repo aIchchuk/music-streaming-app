@@ -65,7 +65,7 @@ class _LoginScreenState extends State<LoginScreenView> {
                   const SizedBox(height: 20),
                   const Text(
                     'Welcome Back',
-                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(fontFamily: 'HelveticaNeueLight', fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   const SizedBox(height: 30),
                   _buildTextFormField(
@@ -98,7 +98,7 @@ class _LoginScreenState extends State<LoginScreenView> {
                     ),
                     child: const Text(
                       'Login',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontFamily: 'HelveticaNeueLight',fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -108,7 +108,7 @@ class _LoginScreenState extends State<LoginScreenView> {
                     },
                     child: const Text(
                       "Don't have an account? Register",
-                      style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontFamily: 'HelveticaNeueBold',color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
