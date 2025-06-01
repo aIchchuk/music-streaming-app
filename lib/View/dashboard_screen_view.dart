@@ -1,18 +1,35 @@
 import 'package:flutter/material.dart';
+import 'package:batch_34a/bottom_navigation_screen/explore.dart';
+import 'package:batch_34a/bottom_navigation_screen/home.dart';
+import 'package:batch_34a/bottom_navigation_screen/profile.dart';
+import 'package:batch_34a/bottom_navigation_screen/saved.dart';
 import 'login_screen_view.dart';
 
-class DashboardScreenView extends StatelessWidget {
+class DashboardScreenView extends StatefulWidget {
   const DashboardScreenView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final List<_DashboardButton> buttons = [
-      _DashboardButton(icon: Icons.library_music, label: 'My Playlists'),
-      _DashboardButton(icon: Icons.search, label: 'Browse'),
-      _DashboardButton(icon: Icons.favorite, label: 'Favorites'),
-      _DashboardButton(icon: Icons.settings, label: 'Settings'),
-    ];
+  State<DashboardScreenView> createState() => _DashboardScreenViewState();
+}
 
+class _DashboardScreenViewState extends State<DashboardScreenView> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _screens = [
+    const HomeScreen(),
+    const ExploreScreen(),
+    const SavedScreen(),
+    const ProfileScreen(),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -26,8 +43,22 @@ class DashboardScreenView extends StatelessWidget {
             );
           },
         ),
-        title: const Text('Toot', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Toot',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.explore), label: 'Explore'),
+          BottomNavigationBarItem(icon: Icon(Icons.favorite), label: 'Saved'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
       ),
       extendBodyBehindAppBar: true,
       body: Container(
@@ -39,59 +70,9 @@ class DashboardScreenView extends StatelessWidget {
             end: Alignment.bottomRight,
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(16, 100, 16, 16),
-        child: Column(
-          children: [
-            const Text(
-              'Welcome to Toot 🎵',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-            const SizedBox(height: 30),
-            Expanded(
-              child: GridView.count(
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                children: buttons.map((btn) => _buildDashboardButton(btn)).toList(),
-              ),
-            ),
-          ],
-        ),
+        padding: const EdgeInsets.only(top: 100),
+        child: _screens[_selectedIndex],
       ),
     );
   }
-
-  Widget _buildDashboardButton(_DashboardButton button) {
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      color: Colors.white.withOpacity(0.15),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () {
-          // Implement navigation or action
-        },
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(button.icon, size: 40, color: Colors.white),
-              const SizedBox(height: 12),
-              Text(
-                button.label,
-                style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _DashboardButton {
-  final IconData icon;
-  final String label;
-
-  _DashboardButton({required this.icon, required this.label});
 }

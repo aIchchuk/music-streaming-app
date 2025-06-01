@@ -124,6 +124,7 @@ class _LoginScreenState extends State<LoginScreenView> {
     required TextEditingController controller,
     required String hint,
     bool obscure = false,
+    
     String? Function(String?)? validator,
   }) {
     return TextFormField(

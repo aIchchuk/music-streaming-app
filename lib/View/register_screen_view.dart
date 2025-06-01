@@ -14,6 +14,9 @@ class _RegisterScreenState extends State<RegisterScreenView> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final TextEditingController _phonenoController = TextEditingController();
+
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreenView> {
   }
 
   @override
+  
   void dispose() {
     _nameFocusNode.dispose();
     _nameController.dispose();
