@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 ThemeData appThemeData = ThemeData(
   primaryColor: Colors.deepOrange,
   fontFamily: 'HelveticaNeueLight',
-  scaffoldBackgroundColor: Colors.white,
+  scaffoldBackgroundColor: Colors.transparent, // ✅ important for gradient
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.deepOrange,
     elevation: 0,
@@ -16,6 +16,6 @@ ThemeData appThemeData = ThemeData(
     ),
   ),
   colorScheme: ColorScheme.fromSwatch().copyWith(
-    secondary: Colors.redAccent, // For accent color
+    secondary: Colors.redAccent,
   ),
 );

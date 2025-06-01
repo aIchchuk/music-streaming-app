@@ -9,47 +9,57 @@ class SavedScreen extends StatefulWidget {
 
 class _SavedScreenState extends State<SavedScreen> {
   final List<Map<String, String>> savedItems = [
-    {
-      'title': 'Dream Pop Essentials',
-      'artist': 'Various Artists',
-      'image': 'https://via.placeholder.com/100x100/4CAF50/FFFFFF?text=DP',
-    },
-    {
-      'title': 'Chill Beats',
-      'artist': 'Lofi Makers',
-      'image': 'https://via.placeholder.com/100x100/9C27B0/FFFFFF?text=CB',
-    },
-    {
-      'title': 'Soulful Mornings',
-      'artist': 'Soul Collective',
-      'image': 'https://via.placeholder.com/100x100/FF9800/000000?text=SM',
-    },
+    {'title': 'Dream Pop Essentials', 'artist': 'Various Artists'},
+    {'title': 'Chill Beats', 'artist': 'Lofi Makers'},
+    {'title': 'Soulful Mornings', 'artist': 'Soul Collective'},
   ];
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: savedItems.length,
-      itemBuilder: (context, index) {
-        final item = savedItems[index];
-        return Card(
-          margin: const EdgeInsets.only(bottom: 16.0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: ListTile(
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.network(item['image']!, width: 60, height: 60, fit: BoxFit.cover),
-            ),
-            title: Text(item['title']!, style: const TextStyle(fontWeight: FontWeight.bold)),
-            subtitle: Text(item['artist']!),
-            trailing: const Icon(Icons.play_arrow),
-            onTap: () {
-              // handle tap, like play or open details
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.redAccent, Colors.purpleAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+
+        child: SafeArea(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: savedItems.length,
+            itemBuilder: (context, index) {
+              final item = savedItems[index];
+              return Card(
+                margin: const EdgeInsets.only(bottom: 16.0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                child: ListTile(
+                  leading: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.deepPurple.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.music_note, size: 28, color: Colors.deepPurple),
+                  ),
+                  title: Text(
+                    item['title']!,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(item['artist']!),
+                  trailing: const Icon(Icons.play_arrow),
+                  onTap: () {
+                    // play or open
+                  },
+                ),
+              );
             },
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }
