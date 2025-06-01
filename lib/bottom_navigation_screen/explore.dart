@@ -14,21 +14,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
   ];
 
   final List<Map<String, String>> trending = [
-    {
-      'title': 'Neon Nights',
-      'artist': 'Synth Waves',
-      'image': 'https://via.placeholder.com/120x120/9C27B0/FFFFFF?text=1'
-    },
-    {
-      'title': 'City Dreams',
-      'artist': 'Urban Soul',
-      'image': 'https://via.placeholder.com/120x120/03A9F4/FFFFFF?text=2'
-    },
-    {
-      'title': 'Echoes',
-      'artist': 'Dreamwave',
-      'image': 'https://via.placeholder.com/120x120/E91E63/FFFFFF?text=3'
-    },
+    {'title': 'Neon Nights', 'artist': 'Synth Waves'},
+    {'title': 'City Dreams', 'artist': 'Urban Soul'},
+    {'title': 'Echoes', 'artist': 'Dreamwave'},
   ];
 
   @override
@@ -110,13 +98,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          item['image']!,
-                          width: 120,
-                          height: 100,
-                          fit: BoxFit.cover,
+                      // Placeholder instead of image
+                      Container(
+                        width: 120,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.deepPurple.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(Icons.music_note, color: Colors.deepPurple, size: 32),
                         ),
                       ),
                       const SizedBox(height: 6),

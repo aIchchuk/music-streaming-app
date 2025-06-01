@@ -3,45 +3,11 @@ import 'package:flutter/material.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  final List<Map<String, String>> featured = const [
-    {
-      'title': 'Lofi Vibes',
-      'artist': 'Chillhop',
-      'image': 'https://via.placeholder.com/300x150/8E24AA/FFFFFF?text=Lofi',
-    },
-    {
-      'title': 'Summer Beats',
-      'artist': 'DJ Sun',
-      'image': 'https://via.placeholder.com/300x150/FF9800/FFFFFF?text=Summer',
-    },
-    {
-      'title': 'Pop Hits',
-      'artist': 'Various',
-      'image': 'https://via.placeholder.com/300x150/E91E63/FFFFFF?text=Pop',
-    },
-  ];
-
   final List<Map<String, String>> albums = const [
-    {
-      'title': 'Urban Grooves',
-      'artist': 'City Sound',
-      'image': 'https://via.placeholder.com/150/2196F3/FFFFFF?text=Urban',
-    },
-    {
-      'title': 'Dream Pop',
-      'artist': 'Nightfall',
-      'image': 'https://via.placeholder.com/150/009688/FFFFFF?text=Dream',
-    },
-    {
-      'title': 'Synthwave',
-      'artist': 'Neon Drive',
-      'image': 'https://via.placeholder.com/150/673AB7/FFFFFF?text=Synth',
-    },
-    {
-      'title': 'Nature Calm',
-      'artist': 'Earth Tones',
-      'image': 'https://via.placeholder.com/150/4CAF50/FFFFFF?text=Nature',
-    },
+    {'title': 'Urban Grooves', 'artist': 'City Sound'},
+    {'title': 'Dream Pop', 'artist': 'Nightfall'},
+    {'title': 'Synthwave', 'artist': 'Neon Drive'},
+    {'title': 'Nature Calm', 'artist': 'Earth Tones'},
   ];
 
   @override
@@ -51,70 +17,110 @@ class HomeScreen extends StatelessWidget {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.redAccent,Colors.deepOrange ],
+            colors: [Colors.redAccent, Colors.deepOrange],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
         ),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 24),
+          padding: const EdgeInsets.symmetric(vertical: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Featured Albums
+              // Now Playing Section
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
-                  'Featured Albums',
+                  'Now Playing',
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                height: 180,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: featured.length,
-                  itemBuilder: (context, index) {
-                    final item = featured[index];
-                    return Container(
-                      width: 300,
-                      margin: const EdgeInsets.symmetric(horizontal: 8),
+
+              Center(
+                child: Column(
+                  children: [
+                    // Album Art
+                    Container(
+                      width: 160,
+                      height: 45,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: NetworkImage(item['image']!),
+                        borderRadius: BorderRadius.circular(16),
+                        image: const DecorationImage(
+                          image: NetworkImage(
+                            'https://via.placeholder.com/200x200.png?text=Album+Art',
+                          ),
                           fit: BoxFit.cover,
                         ),
                       ),
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          gradient: LinearGradient(
-                            colors: [Colors.black.withOpacity(0.5), Colors.transparent],
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.topCenter,
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Song Info
+                    const Text(
+                      'Blinding Lights',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const Text(
+                      'The Weeknd',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white70,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Progress Bar
+                    Container(
+                      height: 6,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(6),
+                        color: Colors.white24,
+                      ),
+                      child: FractionallySizedBox(
+                        alignment: Alignment.centerLeft,
+                        widthFactor: 0.4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: Colors.white,
                           ),
                         ),
-                        alignment: Alignment.bottomLeft,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Animation Placeholder
+                    Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                      ),
+                      child: const Center(
                         child: Text(
-                          '${item['title']} \nby ${item['artist']}',
-                          style: const TextStyle(color: Colors.white, fontSize: 16),
+                          '🎵',
+                          style: TextStyle(fontSize: 24, color: Colors.black),
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
               ),
 
               const SizedBox(height: 32),
 
-              // New Releases Grid
+              // New Releases Section
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
                 child: Text(
@@ -127,6 +133,7 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 12),
+
               GridView.builder(
                 itemCount: albums.length,
                 shrinkWrap: true,
@@ -141,47 +148,45 @@ class HomeScreen extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final album = albums[index];
                   return Card(
-                    color: Colors.white.withOpacity(0.9),
-                    elevation: 4,
+                    color: Colors.white.withOpacity(0.95),
+                    elevation: 3,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius:
-                              const BorderRadius.vertical(top: Radius.circular(12)),
-                          child: Image.network(
-                            album['image']!,
-                            height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Placeholder container for image or design
+                          Container(
+                            height: 80,
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            decoration: BoxDecoration(
+                              color: Colors.deepOrange[100],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Center(
+                              child: Icon(Icons.music_note, size: 30, color: Colors.deepOrange),
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
+                          const SizedBox(height: 12),
+                          Text(
                             album['title']!,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
+                              fontSize: 14,
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                          child: Text(
+                          Text(
                             album['artist']!,
                             style: const TextStyle(
-                              color: Colors.grey,
                               fontSize: 12,
+                              color: Colors.grey,
                             ),
                           ),
-                        ),
-                        const Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: ElevatedButton(
+                          const Spacer(),
+                          ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.deepPurple,
@@ -189,8 +194,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                             child: const Text('Add to Library'),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },
