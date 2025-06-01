@@ -31,24 +31,37 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 48, // 👈 Reduce height here (default is 56)
-        leading: IconButton(
-          icon: const Icon(Icons.logout, color: Colors.white),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreenView()),
-            );
-          },
+      // appBar: AppBar(
+      //   backgroundColor: Colors.transparent,
+      //   elevation: 0,
+        
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.logout, color: Colors.white),
+      //     onPressed: () {
+      //       Navigator.pushReplacement(
+      //         context,
+      //         MaterialPageRoute(builder: (_) => const LoginScreenView()),
+      //       );
+      //     },
+      //   ),
+      //   title: const Text(
+      //     'Toot',
+      //     style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      //   ),
+      //   centerTitle: true,
+      // ),
+
+      body: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepOrange, Colors.redAccent],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-        title: const Text(
-          'Toot',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
+        padding: const EdgeInsets.only(top: 75),
+        child: _screens[_selectedIndex],
       ),
 
       bottomNavigationBar: BottomNavigationBar(
@@ -63,18 +76,7 @@ class _DashboardScreenViewState extends State<DashboardScreenView> {
         onTap: _onItemTapped,
       ),
       extendBodyBehindAppBar: true,
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange, Colors.redAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        padding: const EdgeInsets.only(top: 100),
-        child: _screens[_selectedIndex],
-      ),
+      
     );
   }
 }
