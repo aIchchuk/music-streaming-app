@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:batch_34a/bottom_navigation_screen/explore.dart';
-import 'package:batch_34a/bottom_navigation_screen/home.dart';
-import 'package:batch_34a/bottom_navigation_screen/profile.dart';
-import 'package:batch_34a/bottom_navigation_screen/saved.dart';
+import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/explore.dart';
+import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/home.dart';
+import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/profile.dart';
+import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/saved.dart';
 import 'login_screen_view.dart';
 
 class DashboardScreenView extends StatefulWidget {

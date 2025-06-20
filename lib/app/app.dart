@@ -1,7 +1,7 @@
 
-import 'package:batch_34a/theme/app_theme_data.dart';
+import 'package:batch_34a/app/theme/app_theme_data.dart';
 import 'package:flutter/material.dart';
-import 'View/splashscreen_view.dart';
+import '../features/splash/presentation/view/splashscreen_view.dart';
 
 
 class App extends StatelessWidget {

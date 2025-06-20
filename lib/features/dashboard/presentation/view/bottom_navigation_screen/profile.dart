@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../View/login_screen_view.dart'; // Adjust path as needed
+import '../dashboard/login_screen_view.dart'; // Adjust path as needed
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

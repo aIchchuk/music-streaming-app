@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dashboard_screen_view.dart';
+import '../../../dashboard/presentation/view/dashboard/dashboard_screen_view.dart';
 import 'register_screen_view.dart';
 
 class LoginScreenView extends StatefulWidget {
