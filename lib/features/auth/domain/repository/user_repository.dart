@@ -6,9 +6,8 @@ import 'package:batch_34a/features/auth/domain/entity/user_entity.dart';
 import 'package:dartz/dartz.dart'; // For Either
 
 
-
-
 abstract interface class IUserRepository {
+  Future<Either<Failure, void>> registerUser(UserEntity student);
 
 
   Future<Either<Failure, String>> loginUser(
