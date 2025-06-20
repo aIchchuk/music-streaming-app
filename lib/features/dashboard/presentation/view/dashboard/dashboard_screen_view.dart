@@ -3,7 +3,7 @@ import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation
 import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/home.dart';
 import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/profile.dart';
 import 'package:batch_34a/features/dashboard/presentation/view/bottom_navigation_screen/saved.dart';
-import 'login_screen_view.dart';
+import '../../../../auth/presentation/view/login_screen_view.dart';
 
 class DashboardScreenView extends StatefulWidget {
   const DashboardScreenView({super.key});
