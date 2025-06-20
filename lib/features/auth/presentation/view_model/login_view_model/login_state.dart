@@ -1,15 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-class UserLoginState extends Equatable {
+class LoginState extends Equatable {
   final bool isLoading;
   final bool isSuccess;
 
-  const UserLoginState({required this.isLoading, required this.isSuccess});
+  const LoginState({required this.isLoading, required this.isSuccess});
 
-  const UserLoginState.initial() : isLoading = false, isSuccess = false;
+  const LoginState.initial() : isLoading = false, isSuccess = false;
 
-  UserLoginState copyWith({bool? isLoading, bool? isSuccess}) {
-    return UserLoginState(
+  LoginState copyWith({bool? isLoading, bool? isSuccess}) {
+    return LoginState(
       isLoading: isLoading ?? this.isLoading,
       isSuccess: isSuccess ?? this.isSuccess,
     );

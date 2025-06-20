@@ -1,4 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RegisterScreenView extends StatefulWidget {
   const RegisterScreenView({super.key});
@@ -10,10 +13,12 @@ class RegisterScreenView extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreenView> {
   final _formKey = GlobalKey<FormState>();
   final FocusNode _nameFocusNode = FocusNode();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _phonenoController = TextEditingController();
+
+  File? _img;
 
   @override
   void initState() {
@@ -26,10 +31,34 @@ class _RegisterScreenState extends State<RegisterScreenView> {
   @override
   void dispose() {
     _nameFocusNode.dispose();
-    _nameController.dispose();
-    _emailController.dispose();
+    _fullNameController.dispose();
+    _phoneNumberController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // Check for camera permission
+  Future<void> checkCameraPermission() async {
+    if (await Permission.camera.request().isRestricted ||
+        await Permission.camera.request().isDenied) {
+      await Permission.camera.request();
+    }
+  }
+
+  Future _browseImage(ImageSource imageSource) async {
+    try {
+      final image = await ImagePicker().pickImage(source: imageSource);
+      if (image != null) {
+        setState(() {
+          _img = File(image.path);
+        });
+      } else {
+        return;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 
   @override
@@ -50,7 +79,60 @@ class _RegisterScreenState extends State<RegisterScreenView> {
               key: _formKey,
               child: Column(
                 children: [
-                  const Icon(Icons.person, size: 80, color: Colors.white),
+                  // Profile Image Picker
+                  InkWell(
+                    onTap: () {
+                      showModalBottomSheet(
+                        backgroundColor: Colors.grey[300],
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
+                          ),
+                        ),
+                        builder: (context) => Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  checkCameraPermission().then((_) {
+                                    _browseImage(ImageSource.camera);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.camera),
+                                label: const Text('Camera'),
+                              ),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  checkCameraPermission().then((_) {
+                                    _browseImage(ImageSource.gallery);
+                                  });
+                                  Navigator.pop(context);
+                                },
+                                icon: const Icon(Icons.image),
+                                label: const Text('Gallery'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    child: SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage: _img != null
+                            ? FileImage(_img!)
+                            : const AssetImage('assets/images/profile.png')
+                                  as ImageProvider,
+                      ),
+                    ),
+                  ),
                   const SizedBox(height: 20),
                   const Text(
                     'Create Account',
@@ -58,25 +140,54 @@ class _RegisterScreenState extends State<RegisterScreenView> {
                   ),
                   const SizedBox(height: 30),
                   _buildTextFormField(
-                    controller: _nameController,
+                    controller: _fullNameController,
                     hint: 'Full Name',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your full name';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   _buildTextFormField(
-                    controller: _emailController,
-                    hint: 'Email',
+                    controller: _phoneNumberController,
+                    hint: 'Phone Number',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  _buildTextFormField(
+                    controller: _usernameController,
+                    hint: 'Username',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your username';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   _buildTextFormField(
                     controller: _passwordController,
                     hint: 'Password',
                     obscure: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        // Registration logic here for User registration
+                        // Registration logic here
                       }
                     },
                     style: ElevatedButton.styleFrom(
