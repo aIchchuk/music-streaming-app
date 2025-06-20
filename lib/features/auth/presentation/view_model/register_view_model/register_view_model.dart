@@ -1,44 +1,26 @@
 import 'package:batch_34a/core/common/snackbar/my_snackbar.dart';
 import 'package:batch_34a/features/auth/domain/use_case/user_image_upload_usecase.dart';
-import 'package:batch_34a/features/auth/domain/use_case/user_login_usecase.dart';
 import 'package:batch_34a/features/auth/domain/use_case/user_register_usecase.dart';
 import 'package:batch_34a/features/auth/presentation/view_model/register_view_model/register_event.dart';
 import 'package:batch_34a/features/auth/presentation/view_model/register_view_model/register_state.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class RegisterViewModel extends Bloc<RegisterEvent, RegisterState>{
 
+
+class RegisterViewModel extends Bloc<RegisterEvent, RegisterState> {
   final UserRegisterUsecase _userRegisterUsecase;
-  final UserImageUploadUsecase _userImageUploadUsecase;
+  final UserImageUploadUsecase _uploadImageUsecase;
 
-
-  RegisterViewModel({
-    required UserRegisterUsecase userRegisterUsecase,
-    required UserImageUploadUsecase UserImageUploadUsecase,
-  }) :
-      _userRegisterUsecase = userRegisterUsecase,
-      _userImageUploadUsecase = UserImageUploadUsecase,
-
-      super(RegisterState.initial()){
-        on<RegisterUserEvent>(_onRegisterUser);
-        on<UploadImageEvent>(_onLoadImage);
-      }
-
-
-  void _onLoadImage(UploadImageEvent event, Emitter<RegisterState> emit) async {
-    emit(state.copyWith(isLoading: true));
-    final result = await _userImageUploadUsecase.call(
-      UploadImageParams(file: event.file),
-    );
-    result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, isSuccess: false)),
-      (imageUrl) {
-        emit(state.copyWith(isLoading: false, isSuccess: true, imageName: imageUrl));
-      },
-    );
+  RegisterViewModel(
+    this._userRegisterUsecase,
+    this._uploadImageUsecase,
+  ) : super(RegisterState.initial()) {
+    on<RegisterUserEvent>(_onRegisterUser);
+    on<UploadImageEvent>(_onLoadImage);
   }
+
+
 
   Future<void> _onRegisterUser(
     RegisterUserEvent event,
@@ -50,9 +32,9 @@ class RegisterViewModel extends Bloc<RegisterEvent, RegisterState>{
       RegisterUserParams(
         fullName: event.fullName,
         phone: event.phone,
-        image: state.imageName,
         username: event.username,
         password: event.password,
+        image: state.imageName,
       ),
     );
 
@@ -75,6 +57,17 @@ class RegisterViewModel extends Bloc<RegisterEvent, RegisterState>{
     );
   }
 
+  void _onLoadImage(UploadImageEvent event, Emitter<RegisterState> emit) async {
+    emit(state.copyWith(isLoading: true));
+    final result = await _uploadImageUsecase.call(
+      UploadImageParams(file: event.file),
+    );
 
-
+    result.fold(
+      (l) => emit(state.copyWith(isLoading: false, isSuccess: false)),
+      (r) {
+        emit(state.copyWith(isLoading: false, isSuccess: true, imageName: r));
+      },
+    );
+  }
 }

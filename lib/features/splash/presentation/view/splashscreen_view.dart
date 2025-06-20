@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import '../../../auth/presentation/view/login_screen_view.dart';
+import 'package:batch_34a/features/auth/presentation/view/login_screen_view.dart';
 
 class SplashscreenView extends StatefulWidget {
   @override
@@ -15,17 +15,21 @@ class _SplashscreenViewState extends State<SplashscreenView> with SingleTickerPr
   void initState() {
     super.initState();
 
+    // Initialize the animation controller
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
     );
 
+    // Set the bounce animation
     _bounceAnimation = Tween<double>(begin: 0, end: 15)
         .chain(CurveTween(curve: Curves.easeInOut))
         .animate(_controller);
 
+    // Repeat the animation
     _controller.repeat(reverse: true);
 
+    // After 2 seconds, stop the animation and navigate to the Login Screen
     Timer(const Duration(seconds: 2), () {
       _controller.stop();
       Navigator.of(context).pushReplacement(
@@ -36,7 +40,7 @@ class _SplashscreenViewState extends State<SplashscreenView> with SingleTickerPr
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller.dispose();  // Clean up the controller
     super.dispose();
   }
 

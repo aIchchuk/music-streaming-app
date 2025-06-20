@@ -8,6 +8,7 @@ import 'package:batch_34a/features/auth/domain/use_case/user_register_usecase.da
 import 'package:batch_34a/features/auth/presentation/view_model/login_view_model/login_view_model.dart';
 import 'package:batch_34a/features/auth/presentation/view_model/register_view_model/register_view_model.dart';
 import 'package:batch_34a/features/dashboard/presentation/view_model/dashboard_screen_view_model.dart';
+import 'package:batch_34a/features/splash/presentation/view_model/spashscreen_view_model.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +21,7 @@ Future<void> initDependencies() async {
   await _initSharedPrefs();
 
   await _initAuthModule();
-  await _initHomeModule();
+  await _initDashboardModule();
   await _initSplashModule();
 }
 
@@ -69,7 +70,7 @@ Future<void> _initAuthModule() async {
   );
 }
 
-Future<void> _initHomeModule() async {
+Future<void> _initDashboardModule() async {
   serviceLocator.registerFactory(
     () => DashboardScreenViewModel(loginViewModel: serviceLocator<LoginViewModel>()),
   );
