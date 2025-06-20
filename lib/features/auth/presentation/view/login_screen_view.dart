@@ -31,17 +31,17 @@ class _LoginScreenState extends State<LoginScreenView> {
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Email is required';
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
-    if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
-    return null;
-  }
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) return 'Email is required';
+  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
+  //   if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+  //   return null;
+  // }
 
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) return 'Password is required';
-    return null;
-  }
+  // String? _validatePassword(String? value) {
+  //   if (value == null || value.isEmpty) return 'Password is required';
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -71,24 +71,28 @@ class _LoginScreenState extends State<LoginScreenView> {
                   _buildTextFormField(
                     controller: _emailController,
                     hint: 'Email',
-                    validator: _validateEmail,
+                    // validator: _validateEmail,
                   ),
                   const SizedBox(height: 20),
                   _buildTextFormField(
                     controller: _passwordController,
                     hint: 'Password',
                     obscure: true,
-                    validator: _validatePassword,
+                    // validator: _validatePassword,
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.pushReplacement(
+                      Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (_) => const DashboardScreenView()),
                         );
-                      }
+                      // if (_formKey.currentState!.validate()) {
+                      //   Navigator.pushReplacement(
+                      //     context,
+                      //     MaterialPageRoute(builder: (_) => const DashboardScreenView()),
+                      //   );
+                      // }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,

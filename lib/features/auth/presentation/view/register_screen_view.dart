@@ -13,7 +13,6 @@ class _RegisterScreenState extends State<RegisterScreenView> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   final TextEditingController _phonenoController = TextEditingController();
 
 
@@ -35,17 +34,17 @@ class _RegisterScreenState extends State<RegisterScreenView> {
     super.dispose();
   }
 
-  String? _validateNotEmpty(String? value, String fieldName) {
-    if (value == null || value.isEmpty) return '$fieldName is required';
-    return null;
-  }
+  // String? _validateNotEmpty(String? value, String fieldName) {
+  //   if (value == null || value.isEmpty) return '$fieldName is required';
+  //   return null;
+  // }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) return 'Email is required';
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
-    if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
-    return null;
-  }
+  // String? _validateEmail(String? value) {
+  //   if (value == null || value.isEmpty) return 'Email is required';
+  //   final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$');
+  //   if (!emailRegex.hasMatch(value)) return 'Enter a valid email';
+  //   return null;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -75,20 +74,20 @@ class _RegisterScreenState extends State<RegisterScreenView> {
                   _buildTextFormField(
                     controller: _nameController,
                     hint: 'Name',
-                    validator: (value) => _validateNotEmpty(value, 'Name'),
+                    // validator: (value) => _validateNotEmpty(value, 'Name'),
                   ),
                   const SizedBox(height: 20),
                   _buildTextFormField(
                     controller: _emailController,
                     hint: 'Email',
-                    validator: _validateEmail,
+                    // validator: _validateEmail,
                   ),
                   const SizedBox(height: 20),
                   _buildTextFormField(
                     controller: _passwordController,
                     hint: 'Password',
                     obscure: true,
-                    validator: (value) => _validateNotEmpty(value, 'Password'),
+                    // validator: (value) => _validateNotEmpty(value, 'Password'),
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
