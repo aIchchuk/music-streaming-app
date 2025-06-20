@@ -9,8 +9,6 @@ class StudentEntity extends Equatable{
   final String username;
   final String password;
 
-
-
   const StudentEntity({
     this.userId,
     required this.fullName,
