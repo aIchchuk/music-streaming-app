@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:music_streaming/app.dart'; // 👈 Correct import
+import 'package:music_streaming/app/app.dart'; // 👈 Correct import
 
 void main() {
   testWidgets('App renders without crashing', (WidgetTester tester) async {

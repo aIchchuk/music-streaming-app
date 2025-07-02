@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:batch_34a/app/service_locator/service_locator.dart';
-import 'package:batch_34a/app/theme/app_theme_data.dart';
-import 'package:batch_34a/features/splash/presentation/view/splashscreen_view.dart'; // Adjust to your path
+import 'package:music_streaming/features/dashboard/presentation/view/dashboard_view.dart';
+import 'package:music_streaming/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 
 class App extends StatelessWidget {
   const App({super.key});
@@ -10,9 +9,10 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'TOOT - Music Streaming',
       debugShowCheckedModeBanner: false,
-      theme: appThemeData,  // Use the extracted ThemeData
-      home: SplashscreenView(),  // Set the SplashScreen as the home widget
+      // theme: appThemeData, // Use the extracted ThemeData
+      home: DashboardView();
     );
   }
 }
