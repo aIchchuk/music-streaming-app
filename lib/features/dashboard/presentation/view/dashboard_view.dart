@@ -9,7 +9,6 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: BlocBuilder<DashboardViewModel, DashboardState>(
         builder: (context, state) {
           return state.views.elementAt(state.selectedIndex);
@@ -18,25 +17,25 @@ class DashboardView extends StatelessWidget {
       bottomNavigationBar: BlocBuilder<DashboardViewModel, DashboardState>(
         builder: (context, state) {
           return BottomNavigationBar(
+            type: BottomNavigationBarType.fixed, // Needed for full customization
+            backgroundColor: Colors.black, // Navigation bar background color
+            selectedItemColor: Colors.deepOrangeAccent, // Selected icon/text color
+            unselectedItemColor: Colors.grey, // Unselected items
             items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.dashboard),
-                label: 'Dashboard',
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
               BottomNavigationBarItem(icon: Icon(Icons.queue_music), label: 'Playlists'),
               BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Album'),
-              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account',
-              ),
+              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
             ],
             currentIndex: state.selectedIndex,
-            selectedItemColor: Colors.white,
             onTap: (index) {
               context.read<DashboardViewModel>().onTabTapped(index);
             },
           );
         },
       ),
+
     );
   }
 }

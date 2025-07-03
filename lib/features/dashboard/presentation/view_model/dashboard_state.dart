@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_streaming/features/albums/presentation/view/albums_view.dart';
-import 'package:music_streaming/features/dashboard/presentation/view/dashboard_view.dart';
-import 'package:music_streaming/features/playlists/presentation/view/playlists_view.dart';
+import 'package:music_streaming/app/service_locator/service_locator.dart';
+import 'package:music_streaming/features/album/presentation/view/album_view.dart';
+import 'package:music_streaming/features/home/presentation/view/home_view.dart';
+import 'package:music_streaming/features/playlist/presentation/view/playlist_view.dart';
 import 'package:music_streaming/features/profile/presentation/view/profile_view.dart';
-import 'package:music_streaming/features/songs/presentation/view/songs_view.dart';
+import 'package:music_streaming/features/song/presentation/view/song_view.dart';
+import 'package:music_streaming/features/song/presentation/view_model/song_view_model.dart';
 
 class DashboardState {
   final int selectedIndex;
@@ -17,10 +19,14 @@ class DashboardState {
     return DashboardState(
       selectedIndex: 0,
       views: [
-        DashboardView(),
-        SongsView(),
-        PlaylistsView(),
-        AlbumsView(),
+        HomeView(),
+        BlocProvider.value(
+          value: serviceLocator<SongViewModel>(),
+          child: SongView(),
+        ),
+        // SongView(),
+        PlaylistView(),
+        AlbumView(),
         ProfileView(),
       ],
     );
