@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_streaming/features/auth/presentation/view/register_view.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/login/login_event.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/login/login_view_model.dart';
-import 'package:music_streaming/features/dashboard/presentation/view/dashboard_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -54,13 +52,13 @@ class LoginView extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async{
                       if (_formKey.currentState!.validate()) {
-                        // Placeholder for navigation or login logic
                         context.read<LoginViewModel>().add(
-                            NavigateToHomeView(
+                            LoginWithEmailAndPasswordEvent(
                               context: context,
-                              destination: DashboardView(),
+                              email: _emailController.text,
+                              password: _passwordController.text
                             ),
                           );
                       }
@@ -85,9 +83,8 @@ class LoginView extends StatelessWidget {
                     onPressed: () {
                       // Placeholder for register navigation
                       context.read<LoginViewModel>().add(
-                            NavigateToRegisterView(
+                            NavigateToRegisterViewEvent(
                               context: context,
-                              destination: RegisterView(),
                             ),
                       );
                     },

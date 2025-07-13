@@ -18,5 +18,3 @@ final class DeleteSongEvent extends SongEvent {
 
   DeleteSongEvent({required this.songId});
 }
-
-

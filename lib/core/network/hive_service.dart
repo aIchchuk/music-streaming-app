@@ -1,6 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:music_streaming/app/constant/hive_table_constant.dart';
 import 'package:music_streaming/features/album/data/model/album_hive_model.dart';
+import 'package:music_streaming/features/auth/data/model/user_hive_model.dart';
 import 'package:music_streaming/features/playlist/data/model/playlist_hive_model.dart';
 import 'package:music_streaming/features/song/data/model/song_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,6 +19,7 @@ class HiveService {
     Hive.registerAdapter(SongHiveModelAdapter());
     Hive.registerAdapter(PlaylistHiveModelAdapter());
     Hive.registerAdapter(AlbumHiveModelAdapter());
+    Hive.registerAdapter(UserHiveModelAdapter());
     
   }
 
@@ -76,4 +78,30 @@ class HiveService {
   }
 
 
+  // User Queries
+  Future<void> registerUser(UserHiveModel user) async {
+    var box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
+
+    // Use email as the key (must be unique)
+    await box.put(user.email, user);
+  }
+
+
+  Future<UserHiveModel?> loginUser(String email, String password) async {
+
+    var box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
+
+    var user = box.values.firstWhere(
+      (user) => user.email == email && user.password == password,
+      orElse: () => throw Exception('Invalid username or password'),
+    );
+    return user;
+
+    // for (var user in box.values) {
+    //   if (user.email == email && user.password == password) {
+    //     return user;
+    //   }
+    // }
+    // return null;
+  }
 }

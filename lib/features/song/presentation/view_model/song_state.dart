@@ -7,7 +7,7 @@ class SongState extends Equatable{
   final String? errorMessage;
   
 
-  SongState({required this.isLoading, required this.song, this.errorMessage});
+  const SongState({required this.isLoading, required this.song, this.errorMessage});
 
 
   // initial Constructor

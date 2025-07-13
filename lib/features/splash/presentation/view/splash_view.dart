@@ -4,7 +4,7 @@ import 'package:music_streaming/features/splash/presentation/view_model/splash_v
 
 
 class SplashView extends StatefulWidget {
-  const SplashView({Key? key}) : super(key: key);
+  const SplashView({super.key});
 
   @override
   State<SplashView> createState() => _SplashViewState();

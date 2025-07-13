@@ -1,6 +1,12 @@
 import 'package:get_it/get_it.dart';
 import 'package:music_streaming/core/network/hive_service.dart';
+import 'package:music_streaming/features/auth/data/data_source/local_data_source/user_local_data_source.dart';
+import 'package:music_streaming/features/auth/data/repository/local_repository/user_local_repository.dart';
+import 'package:music_streaming/features/auth/domain/use_case/user_login_usecase.dart';
+import 'package:music_streaming/features/auth/domain/use_case/user_register_usecase.dart';
+import 'package:music_streaming/features/auth/domain/use_case/user_upload_image_usecase.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/login/login_view_model.dart';
+import 'package:music_streaming/features/auth/presentation/view_model/register/register_event.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/register/register_view_model.dart';
 import 'package:music_streaming/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:music_streaming/features/song/data/data_source/local_data_source/song_local_data_source.dart';
@@ -35,13 +41,49 @@ Future _initDashboardModule() async{
   serviceLocator.registerLazySingleton(() => DashboardViewModel());
 }
 
-Future _initSplashModule() async {
+Future<void> _initSplashModule() async {
   serviceLocator.registerFactory(() => SplashViewModel());
 }
 
 Future _initAuthModule() async {
-  serviceLocator.registerFactory(() => LoginViewModel());
-  serviceLocator.registerFactory(() => RegisterViewModel());
+
+  // Data Source 
+  serviceLocator.registerFactory(
+    () => UserLocalDataSource(hiveService: serviceLocator<HiveService>())
+  );
+
+  // Repository
+  serviceLocator.registerFactory(
+    () => UserLocalRepository(userLocalDataSource: serviceLocator<UserLocalDataSource>())
+  );
+
+  // UseCase
+  serviceLocator.registerFactory(
+    () => UserRegisterUsecase(userRepository: serviceLocator<UserLocalRepository>())
+  );
+
+  serviceLocator.registerFactory(
+    () => UserLoginUsecase(userRepository: serviceLocator<UserLocalRepository>())
+  );
+
+  serviceLocator.registerFactory(
+    () => UserUploadImageUsecase(userRepository: serviceLocator<UserLocalRepository>())
+  );
+
+  // View Models
+  serviceLocator.registerFactory(
+    () => RegisterViewModel(
+      serviceLocator<UserRegisterUsecase>(),
+      serviceLocator<UserUploadImageUsecase>(),
+    ),
+  );
+
+  // user login service locator view model
+  serviceLocator.registerFactory(
+    () => LoginViewModel(
+      serviceLocator<UserLoginUsecase>()
+    ),
+  );
 }
 
 Future _initSongModule() async {
@@ -76,4 +118,3 @@ Future _initSongModule() async {
     getSongUsecase: serviceLocator<GetSongUsecase>(),
   ));
 }
-
