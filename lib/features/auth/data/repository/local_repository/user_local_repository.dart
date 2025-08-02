@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:music_streaming/core/error/failure.dart';
@@ -46,13 +45,4 @@ class UserLocalRepository implements IUserRepository {
     }
   }
 
-  @override
-  Future<Either<Failure, String>> uploadUserImage(File file) async {
-    try {
-      final result = await _userLocalDataSource.uploadUserImage(file);
-      return Right(result);
-    } catch (e) {
-      return Left(LocalDatabaseFailure(message: "Failed to upload image: $e"));
-    }
-  }
 }

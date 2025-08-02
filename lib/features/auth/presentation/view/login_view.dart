@@ -10,17 +10,13 @@ class LoginView extends StatelessWidget {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  static const Color spotifyGreen = Color(0xFF1DB954);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange, Colors.redAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+      backgroundColor: const Color(0xFF121212),
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Center(
           child: SingleChildScrollView(
@@ -28,12 +24,11 @@ class LoginView extends StatelessWidget {
               key: _formKey,
               child: Column(
                 children: [
-                  const Icon(Icons.music_note, size: 80, color: Colors.white),
+                  const Icon(Icons.music_note, size: 80, color: spotifyGreen),
                   const SizedBox(height: 20),
                   const Text(
                     'Welcome Back',
                     style: TextStyle(
-                      fontFamily: 'HelveticaNeueLight',
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -52,27 +47,26 @@ class LoginView extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         context.read<LoginViewModel>().add(
-                            LoginWithEmailAndPasswordEvent(
-                              context: context,
-                              email: _emailController.text,
-                              password: _passwordController.text
-                            ),
-                          );
+                              LoginWithEmailAndPasswordEvent(
+                                context: context,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            );
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.deepPurple,
+                      backgroundColor: spotifyGreen,
+                      foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: const Text(
                       'Login',
                       style: TextStyle(
-                        fontFamily: 'HelveticaNeueLight',
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -81,18 +75,14 @@ class LoginView extends StatelessWidget {
                   const SizedBox(height: 10),
                   TextButton(
                     onPressed: () {
-                      // Placeholder for register navigation
                       context.read<LoginViewModel>().add(
-                            NavigateToRegisterViewEvent(
-                              context: context,
-                            ),
-                      );
+                            NavigateToRegisterViewEvent(context: context),
+                          );
                     },
                     child: const Text(
                       "Don't have an account? Register",
                       style: TextStyle(
-                        fontFamily: 'HelveticaNeueBold',
-                        color: Colors.white,
+                        color: spotifyGreen,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
@@ -120,9 +110,9 @@ class LoginView extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
+        hintStyle: const TextStyle(color: Colors.white54),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
+        fillColor: Colors.white10,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

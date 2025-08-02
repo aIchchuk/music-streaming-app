@@ -4,7 +4,6 @@ import 'package:music_streaming/features/auth/data/data_source/local_data_source
 import 'package:music_streaming/features/auth/data/repository/local_repository/user_local_repository.dart';
 import 'package:music_streaming/features/auth/domain/use_case/user_login_usecase.dart';
 import 'package:music_streaming/features/auth/domain/use_case/user_register_usecase.dart';
-import 'package:music_streaming/features/auth/domain/use_case/user_upload_image_usecase.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/login/login_view_model.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/register/register_event.dart';
 import 'package:music_streaming/features/auth/presentation/view_model/register/register_view_model.dart';
@@ -66,15 +65,11 @@ Future _initAuthModule() async {
     () => UserLoginUsecase(userRepository: serviceLocator<UserLocalRepository>())
   );
 
-  serviceLocator.registerFactory(
-    () => UserUploadImageUsecase(userRepository: serviceLocator<UserLocalRepository>())
-  );
 
   // View Models
   serviceLocator.registerFactory(
     () => RegisterViewModel(
       serviceLocator<UserRegisterUsecase>(),
-      serviceLocator<UserUploadImageUsecase>(),
     ),
   );
 

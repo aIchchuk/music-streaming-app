@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:music_streaming/core/network/hive_service.dart';
 import 'package:music_streaming/features/auth/data/data_source/user_data_source.dart';
@@ -38,12 +37,6 @@ class UserLocalDataSource implements IUserDataSource {
   @override
   Future<UserEntity> getCurrentUser() {
     // TODO: implement getCurrentUser
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> uploadUserImage(File file) {
-    // TODO: implement uploadUserImage
     throw UnimplementedError();
   }
 }

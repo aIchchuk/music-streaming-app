@@ -21,13 +21,10 @@ class _AlbumViewState extends State<AlbumView> {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange, Colors.redAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+          
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
         child: showCreateForm ? _buildCreateForm(screenWidth) : _buildInitialButtons(),

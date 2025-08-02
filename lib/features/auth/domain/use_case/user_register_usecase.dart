@@ -7,15 +7,13 @@ import 'package:music_streaming/features/auth/domain/repository/user_repository.
 
 class UserRegisterParams extends Equatable {
   final String fullName;
-  final String phoneNo;
-  final String? userImage;
+
   final String email;
   final String password;
 
   const UserRegisterParams({
     required this.fullName,
-    required this.phoneNo,
-    this.userImage,
+
     required this.email,
     required this.password,
   });
@@ -23,16 +21,14 @@ class UserRegisterParams extends Equatable {
   // Optional: Initial constructor for UI state management
   const UserRegisterParams.initial()
       : fullName = '',
-        phoneNo = '',
-        userImage = null,
+
         email = '',
         password = '';
 
   @override
   List<Object?> get props => [
         fullName,
-        phoneNo,
-        userImage,
+
         email,
         password,
       ];
@@ -48,8 +44,7 @@ class UserRegisterUsecase implements UsecaseWithParams<void, UserRegisterParams>
   Future<Either<Failure, void>> call(UserRegisterParams params) {
     final userEntity = UserEntity(
       fullName: params.fullName,
-      phoneNo: params.phoneNo,
-      userImage: params.userImage,
+
       email: params.email,
       password: params.password,
     );

@@ -20,9 +20,9 @@ class _RegisterViewState extends State<RegisterView> {
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _phoneController = TextEditingController();
 
-  File? _img;
+
+  static const Color spotifyGreen = Color(0xFF1DB954);
 
   Future<void> _checkCameraPermission() async {
     final status = await Permission.camera.request();
@@ -31,178 +31,97 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
-  Future<void> _pickImage(ImageSource source) async {
-    final picked = await ImagePicker().pickImage(source: source);
-    if (picked != null) {
-      setState(() {
-        _img = File(picked.path);
-      });
 
-      context.read<RegisterViewModel>().add(UserUploadImageEvent(file: _img!));
-    }
-  }
-
-  void _showImagePickerModal(BuildContext context) {
-    showModalBottomSheet(
-      backgroundColor: Colors.grey[300],
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () {
-                _checkCameraPermission().then((_) {
-                  _pickImage(ImageSource.camera);
-                });
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.camera),
-              label: const Text('Camera'),
-            ),
-            ElevatedButton.icon(
-              onPressed: () {
-                _checkCameraPermission().then((_) {
-                  _pickImage(ImageSource.gallery);
-                });
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.image),
-              label: const Text('Gallery'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity, // Ensure it fills the screen
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange, Colors.redAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        child: BlocBuilder<RegisterViewModel, RegisterState>(
-          builder: (context, state) {
-            return SafeArea(
-              child: SingleChildScrollView(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Form(
-                      key: _key,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: () => _showImagePickerModal(context),
-                            child: SizedBox(
-                              height: 150,
-                              width: 150,
-                              child: CircleAvatar(
-                                radius: 75,
-                                backgroundImage: _img != null
-                                    ? FileImage(_img!)
-                                    : const AssetImage('assets/images/songs.png') as ImageProvider,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          _buildStyledTextFormField(
-                            controller: _fullNameController,
-                            label: 'Full Name',
-                            validator: (value) =>
-                                value == null || value.isEmpty ? 'Enter full name' : null,
-                          ),
-                          _gap,
-                          _buildStyledTextFormField(
-                            controller: _phoneController,
-                            label: 'Phone No.',
-                            validator: (value) =>
-                                value == null || value.isEmpty ? 'Enter phone number' : null,
-                          ),
-                          _gap,
-                          _buildStyledTextFormField(
-                            controller: _emailController,
-                            label: 'Email',
-                            validator: (value) =>
-                                value == null || value.isEmpty ? 'Enter email' : null,
-                          ),
-                          _gap,
-                          _buildStyledTextFormField(
-                            controller: _passwordController,
-                            label: 'Password',
-                            obscureText: true,
-                            validator: (value) =>
-                                value == null || value.isEmpty ? 'Enter password' : null,
-                          ),
-                          _gap,
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (_key.currentState!.validate()) {
-                                  context.read<RegisterViewModel>().add(
-                                        UserRegisterEvent(
-                                          context: context,
-                                          fullName: _fullNameController.text,
-                                          phoneNo: _phoneController.text,
-                                          userImage: state.imageName,
-                                          email: _emailController.text,
-                                          password: _passwordController.text
-                                        )
-                                      );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                foregroundColor: Colors.deepPurple,
-                                padding: const EdgeInsets.symmetric(vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: state.isLoading
-                                  ? const CircularProgressIndicator(color: Colors.deepPurple)
-                                  : const Text(
-                                      'Register',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        fontFamily: 'HelveticaNeueLight',
-                                      ),
-                                    ),
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                        ],
+      backgroundColor: const Color(0xFF121212),
+      body: BlocBuilder<RegisterViewModel, RegisterState>(
+        builder: (context, state) {
+          return SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Form(
+                  key: _key,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // InkWell(
+                      //   onTap: () => _showImagePickerModal(context),
+                      //   child: CircleAvatar(
+                      //     radius: 75,
+                      //     backgroundImage: _img != null
+                      //         ? FileImage(_img!)
+                      //         : const AssetImage('assets/images/songs.png') as ImageProvider,
+                      //   ),
+                      // ),
+                      const SizedBox(height: 20),
+                      _buildStyledTextFormField(
+                        controller: _fullNameController,
+                        label: 'Full Name',
+                        validator: (value) => value == null || value.isEmpty ? 'Enter full name' : null,
                       ),
-                    ),
+                      _gap,
+                      _buildStyledTextFormField(
+                        controller: _emailController,
+                        label: 'Email',
+                        validator: (value) => value == null || value.isEmpty ? 'Enter email' : null,
+                      ),
+                      _gap,
+                      _buildStyledTextFormField(
+                        controller: _passwordController,
+                        label: 'Password',
+                        obscureText: true,
+                        validator: (value) => value == null || value.isEmpty ? 'Enter password' : null,
+                      ),
+                      _gap,
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_key.currentState!.validate()) {
+                              context.read<RegisterViewModel>().add(
+                                    UserRegisterEvent(
+                                      context: context,
+                                      fullName: _fullNameController.text,
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: spotifyGreen,
+                            foregroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: state.isLoading
+                              ? const CircularProgressIndicator(color: Colors.black)
+                              : const Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
-
 
   Widget _buildStyledTextFormField({
     required TextEditingController controller,
@@ -217,9 +136,9 @@ class _RegisterViewState extends State<RegisterView> {
       validator: validator,
       decoration: InputDecoration(
         hintText: label,
-        hintStyle: const TextStyle(color: Colors.white70),
+        hintStyle: const TextStyle(color: Colors.white54),
         filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
+        fillColor: Colors.white10,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

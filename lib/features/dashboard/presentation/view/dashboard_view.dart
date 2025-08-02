@@ -6,6 +6,8 @@ import 'package:music_streaming/features/dashboard/presentation/view_model/dashb
 class DashboardView extends StatelessWidget {
   const DashboardView({super.key});
 
+  static const Color spotifyGreen = Color(0xFF1DB954);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,10 +19,10 @@ class DashboardView extends StatelessWidget {
       bottomNavigationBar: BlocBuilder<DashboardViewModel, DashboardState>(
         builder: (context, state) {
           return BottomNavigationBar(
-            type: BottomNavigationBarType.fixed, // Needed for full customization
-            backgroundColor: Colors.black, // Navigation bar background color
-            selectedItemColor: Colors.deepOrangeAccent, // Selected icon/text color
-            unselectedItemColor: Colors.grey, // Unselected items
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Colors.black,
+            selectedItemColor: spotifyGreen,
+            unselectedItemColor: Colors.grey,
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
@@ -35,7 +37,6 @@ class DashboardView extends StatelessWidget {
           );
         },
       ),
-
     );
   }
 }
