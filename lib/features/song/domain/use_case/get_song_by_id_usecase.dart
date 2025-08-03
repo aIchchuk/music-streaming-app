@@ -4,13 +4,14 @@ import 'package:music_streaming/core/error/failure.dart';
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 import 'package:music_streaming/features/song/domain/repository/song_repository.dart';
 
-class GetSongUsecase implements UsecaseWithoutParams<List<SongEntity>> {
-  final ISongRepository iSongRepository;
+class GetSongByIdUsecase implements UsecaseWithParams<SongEntity, String> {
+  final ISongRepository _songRepository;
 
-  GetSongUsecase({required this.iSongRepository});
+  GetSongByIdUsecase({required ISongRepository songRepository})
+      : _songRepository = songRepository;
 
   @override
-  Future<Either<Failure, List<SongEntity>>> call() async {
-    return await iSongRepository.getSong();
+  Future<Either<Failure, SongEntity>> call(String id) {
+    return _songRepository.getSongById(id);
   }
 }

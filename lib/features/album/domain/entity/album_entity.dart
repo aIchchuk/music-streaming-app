@@ -5,16 +5,16 @@ class AlbumEntity extends Equatable {
   final String? albumId;
   final String albumName;
   final String artistName;
-  final String? image;
-  final String releaseYear;
-  final List<SongEntity> song; // ✅ List of songs in the album
+  final String? albumImage;     // Local file path
+  final String? albumImageUrl;  // External URL
+  final List<SongEntity> song;  // Referenced song list
 
   const AlbumEntity({
     this.albumId,
     required this.albumName,
     required this.artistName,
-    this.image,
-    required this.releaseYear,
+    this.albumImage,
+    this.albumImageUrl,
     required this.song,
   });
 
@@ -23,8 +23,8 @@ class AlbumEntity extends Equatable {
         albumId,
         albumName,
         artistName,
-        image,
-        releaseYear,
+        albumImage,
+        albumImageUrl,
         song,
       ];
 }

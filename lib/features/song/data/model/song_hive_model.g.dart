@@ -8,7 +8,7 @@ part of 'song_hive_model.dart';
 
 class SongHiveModelAdapter extends TypeAdapter<SongHiveModel> {
   @override
-  final int typeId = HiveTableConstant.songTableId; // Use same ID as annotated
+  final int typeId = HiveTableConstant.songTableId;
 
   @override
   SongHiveModel read(BinaryReader reader) {
@@ -20,17 +20,20 @@ class SongHiveModelAdapter extends TypeAdapter<SongHiveModel> {
       songId: fields[0] as String?,
       songName: fields[1] as String,
       artistName: fields[2] as String,
-      image: fields[3] as String?,
-      audioUrl: fields[4] as String,
-      albumName: fields[5] as String,
-      duration: fields[6] as String?,
+      songImage: fields[3] as String?,
+      songImageUrl: fields[4] as String?,
+      audioFile: fields[5] as String?,
+      audioUrl: fields[6] as String?,
+      albumName: fields[7] as String?,
+      originalImageFileName: fields[8] as String?,
+      originalAudioFileName: fields[9] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, SongHiveModel obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.songId)
       ..writeByte(1)
@@ -38,13 +41,19 @@ class SongHiveModelAdapter extends TypeAdapter<SongHiveModel> {
       ..writeByte(2)
       ..write(obj.artistName)
       ..writeByte(3)
-      ..write(obj.image)
+      ..write(obj.songImage)
       ..writeByte(4)
-      ..write(obj.audioUrl)
+      ..write(obj.songImageUrl)
       ..writeByte(5)
-      ..write(obj.albumName)
+      ..write(obj.audioFile)
       ..writeByte(6)
-      ..write(obj.duration);
+      ..write(obj.audioUrl)
+      ..writeByte(7)
+      ..write(obj.albumName)
+      ..writeByte(8)
+      ..write(obj.originalImageFileName)
+      ..writeByte(9)
+      ..write(obj.originalAudioFileName);
   }
 
   @override

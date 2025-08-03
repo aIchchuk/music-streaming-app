@@ -19,10 +19,10 @@ class AlbumHiveModel extends Equatable {
   final String artistName;
 
   @HiveField(3)
-  final String? image;
+  final String? albumImage; // local path
 
   @HiveField(4)
-  final String releaseYear;
+  final String? albumImageUrl; // external URL
 
   @HiveField(5)
   final List<SongHiveModel> song;
@@ -31,8 +31,8 @@ class AlbumHiveModel extends Equatable {
     String? albumId,
     required this.albumName,
     required this.artistName,
-    this.image,
-    required this.releaseYear,
+    this.albumImage,
+    this.albumImageUrl,
     required this.song,
   }) : albumId = albumId ?? const Uuid().v4();
 
@@ -40,8 +40,8 @@ class AlbumHiveModel extends Equatable {
       : albumId = '',
         albumName = '',
         artistName = '',
-        image = '',
-        releaseYear = '',
+        albumImage = '',
+        albumImageUrl = '',
         song = const [];
 
   /// From Entity → Hive Model
@@ -50,8 +50,8 @@ class AlbumHiveModel extends Equatable {
       albumId: entity.albumId,
       albumName: entity.albumName,
       artistName: entity.artistName,
-      image: entity.image,
-      releaseYear: entity.releaseYear,
+      albumImage: entity.albumImage,
+      albumImageUrl: entity.albumImageUrl,
       song: entity.song.map(SongHiveModel.fromEntity).toList(),
     );
   }
@@ -62,16 +62,14 @@ class AlbumHiveModel extends Equatable {
       albumId: albumId,
       albumName: albumName,
       artistName: artistName,
-      image: image,
-      releaseYear: releaseYear,
+      albumImage: albumImage,
+      albumImageUrl: albumImageUrl,
       song: song.map((model) => model.toEntity()).toList(),
     );
   }
 
-  // To entityList
-
-  static List<AlbumEntity> toEntityList(List<AlbumHiveModel> model) {
-    return model.map((model) => model.toEntity()).toList();
+  static List<AlbumEntity> toEntityList(List<AlbumHiveModel> models) {
+    return models.map((model) => model.toEntity()).toList();
   }
 
   @override
@@ -79,8 +77,8 @@ class AlbumHiveModel extends Equatable {
         albumId,
         albumName,
         artistName,
-        image,
-        releaseYear,
+        albumImage,
+        albumImageUrl,
         song,
       ];
 }

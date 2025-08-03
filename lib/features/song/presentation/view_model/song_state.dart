@@ -1,35 +1,63 @@
 import 'package:equatable/equatable.dart';
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 
-class SongState extends Equatable{
+class SongState extends Equatable {
   final bool isLoading;
-  final List<SongEntity> song;
+  final bool isSuccess;
+  final List<SongEntity> songList;
+  final SongEntity? selectedSong;
+  final String? songImageName;
+  final String? audioFileName;
   final String? errorMessage;
   
 
-  const SongState({required this.isLoading, required this.song, this.errorMessage});
+  const SongState({
+    required this.isLoading,
+    required this.isSuccess,
+    required this.songList,
+    this.selectedSong,
+    this.songImageName,
+    this.audioFileName,
+    this.errorMessage,
+  });
 
+  const SongState.initial()
+      : isLoading = false,
+        isSuccess = false,
+        songList = const [],
+        selectedSong = null,
+        songImageName = null,
+        audioFileName = null,
+        errorMessage = null;
 
-  // initial Constructor
-  SongState.initial() : song = [], isLoading = false, errorMessage = null;
-
-  // copyState
   SongState copyWith({
     bool? isLoading,
-    List<SongEntity>? song,
+    bool? isSuccess,
+    List<SongEntity>? songList,
+    SongEntity? selectedSong,
+    String? songImageName,
+    String? audioFileName,
     String? errorMessage,
   }) {
     return SongState(
       isLoading: isLoading ?? this.isLoading,
-      song: song ?? this.song,
-      errorMessage: errorMessage ?? this.errorMessage,
+      isSuccess: isSuccess ?? this.isSuccess,
+      songList: songList ?? this.songList,
+      selectedSong: selectedSong ?? this.selectedSong,
+      songImageName: songImageName ?? this.songImageName,
+      audioFileName: audioFileName ?? this.audioFileName,
+      errorMessage: errorMessage,
     );
   }
 
-
   @override
-  List<Object?> get props => [isLoading, song, errorMessage];
-
-  
-
+  List<Object?> get props => [
+        isLoading,
+        isSuccess,
+        songList,
+        selectedSong,
+        songImageName,
+        audioFileName,
+        errorMessage,
+      ];
 }

@@ -1,16 +1,17 @@
 import 'package:dartz/dartz.dart';
 import 'package:music_streaming/app/use_case/usecase.dart';
 import 'package:music_streaming/core/error/failure.dart';
+import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 import 'package:music_streaming/features/song/domain/repository/song_repository.dart';
 
-class DeleteSongUsecase implements UsecaseWithParams<void, String> {
+class GetFeaturedSongUsecase implements UsecaseWithoutParams<List<SongEntity>> {
   final ISongRepository _songRepository;
 
-  DeleteSongUsecase({required ISongRepository songRepository})
+  GetFeaturedSongUsecase({required ISongRepository songRepository})
       : _songRepository = songRepository;
 
   @override
-  Future<Either<Failure, void>> call(String id) {
-    return _songRepository.deleteSong(id);
+  Future<Either<Failure, List<SongEntity>>> call() {
+    return _songRepository.getFeaturedSong();
   }
 }

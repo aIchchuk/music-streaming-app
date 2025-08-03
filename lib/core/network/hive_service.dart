@@ -6,13 +6,10 @@ import 'package:music_streaming/features/playlist/data/model/playlist_hive_model
 import 'package:music_streaming/features/song/data/model/song_hive_model.dart';
 import 'package:path_provider/path_provider.dart';
 
-
 class HiveService {
   Future<void> init() async {
-    // Initialize the database
-    var directory = await getApplicationDocumentsDirectory();
-    var path = '${directory.path}toot_music_streaming.db';
-
+    final directory = await getApplicationDocumentsDirectory();
+    final path = '${directory.path}/toot_music_streaming.db';
     Hive.init(path);
 
     // Register Adapters
@@ -20,88 +17,110 @@ class HiveService {
     Hive.registerAdapter(PlaylistHiveModelAdapter());
     Hive.registerAdapter(AlbumHiveModelAdapter());
     Hive.registerAdapter(UserHiveModelAdapter());
-    
   }
 
+  // ---------------- SONG QUERIES ---------------- //
 
-  // Song Queries
   Future<void> addSong(SongHiveModel song) async {
-    // Check if the song already exists
-    var box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
-
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
     await box.put(song.songId, song);
   }
 
   Future<void> deleteSong(String id) async {
-    var box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
     await box.delete(id);
   }
 
   Future<List<SongHiveModel>> getAllSong() async {
-    // Sort by SongsName
-    var box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
     return box.values.toList();
   }
 
-  // Playlist Queries
-  Future<void> addPlaylist(PlaylistHiveModel playlist) async {
-    var box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
+  Future<SongHiveModel> getSongById(String id) async {
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final song = box.get(id);
+    if (song == null) {
+      throw Exception('Song not found');
+    }
+    return song;
+  }
 
+  Future<List<SongHiveModel>> getSongByName(String songName) async {
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    return box.values
+        .where((song) =>
+            song.songName.toLowerCase().contains(songName.toLowerCase()))
+        .toList();
+  }
+
+  Future<List<SongHiveModel>> getFeaturedSong() async {
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final allSongs = box.values.toList();
+    allSongs.shuffle();
+    return allSongs.take(6).toList();
+  }
+
+  Future<List<SongHiveModel>> getMadeForYouSong() async {
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final allSongs = box.values.toList();
+    allSongs.shuffle();
+    return allSongs.take(4).toList();
+  }
+
+  Future<List<SongHiveModel>> getTrendingSong() async {
+    final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
+    final allSongs = box.values.toList();
+    allSongs.shuffle();
+    return allSongs.take(4).toList();
+  }
+
+  // ---------------- PLAYLIST QUERIES ---------------- //
+
+  Future<void> addPlaylist(PlaylistHiveModel playlist) async {
+    final box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
     await box.put(playlist.playlistId, playlist);
   }
 
   Future<void> deletePlaylist(String id) async {
-    var box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
+    final box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
     await box.delete(id);
   }
 
   Future<List<PlaylistHiveModel>> getAllPlaylist() async {
-    var box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
+    final box = await Hive.openBox<PlaylistHiveModel>(HiveTableConstant.playlistBox);
     return box.values.toList();
   }
 
-  // Album Queries
-  Future<void> addAlbum(AlbumHiveModel album) async {
-    var box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
+  // ---------------- ALBUM QUERIES ---------------- //
 
+  Future<void> addAlbum(AlbumHiveModel album) async {
+    final box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
     await box.put(album.albumId, album);
   }
 
   Future<void> deleteAlbum(String id) async {
-    var box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
+    final box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
     await box.delete(id);
   }
 
   Future<List<AlbumHiveModel>> getAllAlbum() async {
-    var box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
+    final box = await Hive.openBox<AlbumHiveModel>(HiveTableConstant.albumBox);
     return box.values.toList();
   }
 
+  // ---------------- USER QUERIES ---------------- //
 
-  // User Queries
   Future<void> registerUser(UserHiveModel user) async {
-    var box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
-
-    // Use email as the key (must be unique)
-    await box.put(user.email, user);
+    final box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
+    await box.put(user.email, user); // Email used as unique key
   }
 
-
   Future<UserHiveModel?> loginUser(String email, String password) async {
+    final box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
 
-    var box = await Hive.openBox<UserHiveModel>(HiveTableConstant.userBox);
-
-    var user = box.values.firstWhere(
+    return box.values.firstWhere(
       (user) => user.email == email && user.password == password,
       orElse: () => throw Exception('Invalid username or password'),
     );
-    return user;
-
-    // for (var user in box.values) {
-    //   if (user.email == email && user.password == password) {
-    //     return user;
-    //   }
-    // }
-    // return null;
   }
 }

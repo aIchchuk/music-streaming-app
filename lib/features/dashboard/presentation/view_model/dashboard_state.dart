@@ -25,7 +25,7 @@ class DashboardState {
           child: SongView(),
         ),
         // SongView(),
-        PlaylistView(),
+        // PlaylistView(),
         AlbumView(),
         ProfileView(),
       ],

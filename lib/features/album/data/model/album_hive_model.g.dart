@@ -20,8 +20,8 @@ class AlbumHiveModelAdapter extends TypeAdapter<AlbumHiveModel> {
       albumId: fields[0] as String?,
       albumName: fields[1] as String,
       artistName: fields[2] as String,
-      image: fields[3] as String?,
-      releaseYear: fields[4] as String,
+      albumImage: fields[3] as String?,
+      albumImageUrl: fields[4] as String?,
       song: (fields[5] as List).cast<SongHiveModel>(),
     );
   }
@@ -37,9 +37,9 @@ class AlbumHiveModelAdapter extends TypeAdapter<AlbumHiveModel> {
       ..writeByte(2)
       ..write(obj.artistName)
       ..writeByte(3)
-      ..write(obj.image)
+      ..write(obj.albumImage)
       ..writeByte(4)
-      ..write(obj.releaseYear)
+      ..write(obj.albumImageUrl)
       ..writeByte(5)
       ..write(obj.song);
   }

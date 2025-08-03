@@ -26,7 +26,7 @@ class DashboardView extends StatelessWidget {
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
               BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
-              BottomNavigationBarItem(icon: Icon(Icons.queue_music), label: 'Playlists'),
+              // BottomNavigationBarItem(icon: Icon(Icons.queue_music), label: 'Playlists'),
               BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Album'),
               BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
             ],

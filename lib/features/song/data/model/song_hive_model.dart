@@ -4,7 +4,6 @@ import 'package:music_streaming/app/constant/hive_table_constant.dart';
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 import 'package:uuid/uuid.dart';
 
-// Adapter
 part 'song_hive_model.g.dart';
 
 @HiveType(typeId: HiveTableConstant.songTableId)
@@ -19,66 +18,79 @@ class SongHiveModel extends Equatable {
   final String artistName;
 
   @HiveField(3)
-  final String? image;
+  final String? songImage;
 
   @HiveField(4)
-  final String audioUrl;
+  final String? songImageUrl;
 
   @HiveField(5)
-  final String albumName;
+  final String? audioFile;
 
   @HiveField(6)
-  final String? duration;
+  final String? audioUrl;
+
+  @HiveField(7)
+  final String? albumName;
+
+  @HiveField(8)
+  final String? originalImageFileName;
+
+  @HiveField(9)
+  final String? originalAudioFileName;
 
   SongHiveModel({
     String? songId,
     required this.songName,
     required this.artistName,
-    this.image,
-    required this.audioUrl,
-    required this.albumName,
-    this.duration,
+    this.songImage,
+    this.songImageUrl,
+    this.audioFile,
+    this.audioUrl,
+    this.albumName,
+    this.originalImageFileName,
+    this.originalAudioFileName,
   }) : songId = songId ?? const Uuid().v4();
 
   const SongHiveModel.initial()
       : songId = '',
         songName = '',
         artistName = '',
-        image = '',
+        songImage = '',
+        songImageUrl = '',
+        audioFile = '',
         audioUrl = '',
         albumName = '',
-        duration = '';
+        originalImageFileName = '',
+        originalAudioFileName = '';
 
-  /// Convert from Entity to Hive Model
   factory SongHiveModel.fromEntity(SongEntity entity) {
     return SongHiveModel(
       songId: entity.songId,
       songName: entity.songName,
       artistName: entity.artistName,
-      image: entity.image,
+      songImage: entity.songImage,
+      songImageUrl: entity.songImageUrl,
+      audioFile: entity.audioFile,
       audioUrl: entity.audioUrl,
-      albumName: entity.albumName ?? '',
-      duration: entity.duration,
+      albumName: entity.albumName,
+      originalImageFileName: entity.originalImageFileName,
+      originalAudioFileName: entity.originalAudioFileName,
     );
   }
 
-  /// Convert from Hive Model to Entity
   SongEntity toEntity() {
     return SongEntity(
       songId: songId,
       songName: songName,
       artistName: artistName,
-      image: image,
+      songImage: songImage,
+      songImageUrl: songImageUrl,
+      audioFile: audioFile,
       audioUrl: audioUrl,
-      albumName: albumName.isEmpty ? null : albumName,
-      duration: duration,
+      albumName: albumName,
+      originalImageFileName: originalImageFileName,
+      originalAudioFileName: originalAudioFileName,
     );
-  }
-
-  // To entityList
-
-  static List<SongEntity> toEntityList(List<SongHiveModel> model) {
-    return model.map((model) => model.toEntity()).toList();
   }
 
   @override
@@ -86,9 +98,12 @@ class SongHiveModel extends Equatable {
         songId,
         songName,
         artistName,
-        image,
+        songImage,
+        songImageUrl,
+        audioFile,
         audioUrl,
         albumName,
-        duration,
+        originalImageFileName,
+        originalAudioFileName,
       ];
 }

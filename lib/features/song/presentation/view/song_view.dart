@@ -1,202 +1,158 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:music_streaming/features/song/presentation/view_model/song_event.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:music_streaming/features/song/presentation/view_model/song_state.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:music_streaming/features/song/presentation/view_model/song_event.dart';
 import 'package:music_streaming/features/song/presentation/view_model/song_view_model.dart';
 
 class SongView extends StatefulWidget {
-  const SongView({super.key});
+  const SongView({Key? key}) : super(key: key);
 
   @override
   State<SongView> createState() => _SongViewState();
 }
 
 class _SongViewState extends State<SongView> {
-  bool showCreateForm = false;
-
   final _formKey = GlobalKey<FormState>();
   final _songNameController = TextEditingController();
   final _artistNameController = TextEditingController();
-  final _audioUrlController = TextEditingController();
-  final _releaseYearController = TextEditingController();
   final _albumNameController = TextEditingController();
+
+  File? _songImageFile;
+  File? _audioFile;
+
+  Future<void> _checkPermission(Permission permission) async {
+    if (await permission.isDenied || await permission.isRestricted) {
+      await permission.request();
+    }
+  }
+
+  Future<void> _pickImage() async {
+    await _checkPermission(Permission.photos);
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _songImageFile = File(pickedFile.path);
+      });
+      context.read<SongViewModel>().add(UploadSongCoverImageEvent(songImage: _songImageFile!));
+    }
+  }
+
+  Future<void> _pickAudio() async {
+    await _checkPermission(Permission.storage);
+    final pickedFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _audioFile = File(pickedFile.path);
+      });
+      context.read<SongViewModel>().add(UploadSongAudioFileEvent(audioFile: _audioFile!));
+    }
+  }
+
+  @override
+  void dispose() {
+    _songNameController.dispose();
+    _artistNameController.dispose();
+    _albumNameController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
-      body: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-        child: showCreateForm ? _buildCreateForm(screenWidth) : _buildInitialButtons(),
-      ),
-    );
-  }
-
-  Widget _buildInitialButtons() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            // Logic for playing songs (placeholder)
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.deepOrange,
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          child: const Text('Play Songs', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              showCreateForm = true;
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
-            foregroundColor: Colors.deepOrange,
-            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-          child: const Text('Create Song', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildCreateForm(double screenWidth) {
-    return Center(
-      child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: screenWidth < 400 ? screenWidth * 0.9 : 400,
-          ),
+      appBar: AppBar(title: const Text('Create Song')),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 10),
-                const SizedBox(
-                  height: 120,
-                  width: 120,
+                GestureDetector(
+                  onTap: _pickImage,
                   child: CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/images/songs.png'),
+                    radius: 60,
+                    backgroundImage: _songImageFile != null
+                        ? FileImage(_songImageFile!)
+                        : const AssetImage('assets/images/default_song_cover.png') as ImageProvider,
+                    child: _songImageFile == null
+                        ? const Icon(Icons.camera_alt, size: 40, color: Colors.white70)
+                        : null,
                   ),
                 ),
-                const SizedBox(height: 30),
-                _buildTextField(_songNameController, 'Song Name'),
-                const SizedBox(height: 20),
-                _buildTextField(_artistNameController, 'Artist Name'),
-                const SizedBox(height: 20),
-                _buildTextField(_albumNameController, 'Album Name'),
-                const SizedBox(height: 20),
-                _buildTextField(_releaseYearController, 'Release Year'),
-                const SizedBox(height: 20),
-                _buildTextField(_audioUrlController, 'Audio Url'),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    context.read<SongViewModel>().add(
-                      AddSongEvent(songName: _songNameController.text),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 50,
-                      vertical: 15,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: const Text(
-                    'Save Song',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _songNameController,
+                  decoration: const InputDecoration(labelText: 'Song Name'),
+                  validator: (value) => value == null || value.isEmpty ? 'Enter song name' : null,
                 ),
-                BlocBuilder<SongViewModel, SongState>(
-                  builder: (context, state) {
-                    if (state.isLoading) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    if (state.song.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No songs available',
-                          style: TextStyle(fontSize: 16),
-                        ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _artistNameController,
+                  decoration: const InputDecoration(labelText: 'Artist Name'),
+                  validator: (value) => value == null || value.isEmpty ? 'Enter artist name' : null,
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _albumNameController,
+                  decoration: const InputDecoration(labelText: 'Album Name (optional)'),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton.icon(
+                  onPressed: _pickAudio,
+                  icon: const Icon(Icons.audiotrack),
+                  label: Text(_audioFile == null ? 'Select Audio File' : 'Audio Selected'),
+                ),
+                const SizedBox(height: 32),
+                BlocConsumer<SongViewModel, SongState>(
+                  listener: (context, state) {
+                    if (state.isSuccess) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Song created successfully')),
+                      );
+                      Navigator.pop(context);
+                    } else if (state.errorMessage != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.errorMessage!)),
                       );
                     }
-                    if (state.errorMessage != null) {
-                      return Text('Error: ${state.errorMessage}');
+                  },
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const CircularProgressIndicator();
                     }
-                    
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: state.song.length,
-                      itemBuilder: (context, index) {
-                        final song = state.song[index];
-                        return ListTile(
-                          title: Text(song.songName),
-                          subtitle: Text('${song.songId}'),
-                          trailing: IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              context.read<SongViewModel>().add(
-                                DeleteSongEvent(songId: song.songId ?? ''),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            context.read<SongViewModel>().add(
+                                  CreateSongEvent(
+                                    context: context,
+                                    songName: _songNameController.text.trim(),
+                                    artistName: _artistNameController.text.trim(),
+                                    albumName: _albumNameController.text.trim().isEmpty
+                                        ? null
+                                        : _albumNameController.text.trim(),
+                                    songImage: _songImageFile,
+                                    audioFile: _audioFile,
+                                  ),
+                                );
+                          }
+                        },
+                        child: const Text('Create Song'),
+                      ),
                     );
-
-                  }
-                )
+                  },
+                ),
               ],
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hint) {
-    return TextFormField(
-      controller: controller,
-      style: const TextStyle(color: Colors.white),
-      // validator: (value) {
-      //   if (value == null || value.isEmpty) {
-      //     return 'Please enter $hint';
-      //   }
-      //   return null;
-      // },
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
       ),
     );
   }
