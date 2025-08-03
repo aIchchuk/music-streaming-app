@@ -12,8 +12,9 @@ class SongLocalRepository implements ISongRepository {
   SongLocalRepository({required SongLocalDataSource songLocalDataSource})
       : _songLocalDataSource = songLocalDataSource;
 
+
   @override
-  Future<Either<Failure, void>> createSong(SongEntity song) async {
+  Future<Either<Failure, void>> createSong(SongEntity song, {File? songImage, File? audioFile}) async {
     try {
       await _songLocalDataSource.createSong(song);
       return Right(null);
@@ -21,6 +22,7 @@ class SongLocalRepository implements ISongRepository {
       return Left(LocalDatabaseFailure(message: "Failed to create song: $e"));
     }
   }
+
 
   @override
   Future<Either<Failure, void>> deleteSong(String songId) async {
@@ -73,18 +75,6 @@ class SongLocalRepository implements ISongRepository {
   }
 
   @override
-  Future<Either<Failure, String>> uploadAudioFile(File audioFile) {
-    // TODO: implement uploadAudioFile
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, String>> uploadCoverImage(File songImageFile) {
-    // TODO: implement uploadCoverImage
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, List<SongEntity>>> getFeaturedSong() async {
     try {
       final songs = await _songLocalDataSource.getFeaturedSong();
@@ -113,4 +103,6 @@ class SongLocalRepository implements ISongRepository {
       return Left(LocalDatabaseFailure(message: "Failed to get trending songs: $e"));
     }
   }
+  
+
 }

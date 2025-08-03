@@ -12,8 +12,9 @@ class SongRemoteRepository implements ISongRepository {
   SongRemoteRepository({required SongRemoteDataSource songRemoteDataSource})
       : _songRemoteDataSource = songRemoteDataSource;
 
+  
   @override
-  Future<Either<Failure, void>> createSong(SongEntity song) async {
+  Future<Either<Failure, void>> createSong(SongEntity song, {File? songImage, File? audioFile}) async{
     try {
       await _songRemoteDataSource.createSong(song);
       return const Right(null);
@@ -101,24 +102,7 @@ class SongRemoteRepository implements ISongRepository {
       return Left(RemoteDatabaseFailure(message: e.toString()));
     }
   }
+  
 
-  @override
-  Future<Either<Failure, String>> uploadAudioFile(File audioFile) async {
-    try {
-      final path = await _songRemoteDataSource.uploadAudioFile(audioFile);
-      return Right(path);
-    } catch (e) {
-      return Left(RemoteDatabaseFailure(message: e.toString()));
-    }
-  }
 
-  @override
-  Future<Either<Failure, String>> uploadCoverImage(File songImageFile) async {
-    try {
-      final path = await _songRemoteDataSource.uploadCoverImage(songImageFile);
-      return Right(path);
-    } catch (e) {
-      return Left(RemoteDatabaseFailure(message: e.toString()));
-    }
-  }
 }

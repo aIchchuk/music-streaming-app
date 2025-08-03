@@ -78,24 +78,6 @@ final class DeleteSongEvent extends SongEvent {
   List<Object?> get props => [songId];
 }
 
-final class UploadSongCoverImageEvent extends SongEvent {
-  final File songImage;
-
-  const UploadSongCoverImageEvent({required this.songImage});
-
-  @override
-  List<Object?> get props => [songImage];
-}
-
-final class UploadSongAudioFileEvent extends SongEvent {
-  final File audioFile;
-
-  const UploadSongAudioFileEvent({required this.audioFile});
-
-  @override
-  List<Object?> get props => [audioFile];
-}
-
 final class GetFeaturedSongEvent extends SongEvent {
   const GetFeaturedSongEvent();
 }

@@ -21,7 +21,7 @@ class HiveService {
 
   // ---------------- SONG QUERIES ---------------- //
 
-  Future<void> addSong(SongHiveModel song) async {
+  Future<void> createSong(SongHiveModel song) async {
     final box = await Hive.openBox<SongHiveModel>(HiveTableConstant.songBox);
     await box.put(song.songId, song);
   }

@@ -12,8 +12,8 @@ class CreateSongParams extends Equatable {
   final String songName;
   final String artistName;
   final String? albumName;
-  final String? songImage;
-  final String? audioFile;
+  final File? songImage;  // Changed to File?
+  final File? audioFile;  // Changed to File?
 
   const CreateSongParams({
     required this.songName,
@@ -28,12 +28,13 @@ class CreateSongParams extends Equatable {
         songName,
         artistName,
         albumName,
+        songImage,
+        audioFile,
       ];
 }
 
 /// Usecase for creating a new song
-class CreateSongUsecase
-    implements UsecaseWithParams<void, CreateSongParams> {
+class CreateSongUsecase implements UsecaseWithParams<void, CreateSongParams> {
   final ISongRepository _songRepository;
 
   CreateSongUsecase({required ISongRepository songRepository})
@@ -45,10 +46,11 @@ class CreateSongUsecase
       songName: params.songName,
       artistName: params.artistName,
       albumName: params.albumName,
-      songImage: params.songImage,
-      audioFile: params.audioFile,
+      songImage: null, // We'll assume repo handles upload, so pass null or handle inside repo
+      audioFile: null, // same here
     );
 
+    // The repository should handle file upload internally using the passed File objects
     return _songRepository.createSong(songEntity);
   }
 }

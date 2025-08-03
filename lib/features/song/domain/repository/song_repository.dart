@@ -11,15 +11,13 @@ abstract interface class ISongRepository {
 
   Future<Either<Failure, List<SongEntity>>> getSongByName(String songName);
 
-  Future<Either<Failure, void>> createSong(SongEntity song);
+  Future<Either<Failure, void>> createSong( SongEntity song,
+  {File? songImage,
+  File? audioFile});
 
   Future<Either<Failure, SongEntity>> updateSong(SongEntity song);
 
   Future<Either<Failure, void>> deleteSong(String songId);
-
-  Future<Either<Failure, String>> uploadCoverImage(File songImageFile);
-
-  Future<Either<Failure, String>> uploadAudioFile(File audioFile);
 
   Future<Either<Failure, List<SongEntity>>> getFeaturedSong();
 

@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:music_streaming/core/network/hive_service.dart';
 import 'package:music_streaming/features/song/data/data_source/song_data_source.dart';
@@ -15,7 +14,7 @@ class SongLocalDataSource implements ISongDataSource {
   Future<void> createSong(SongEntity song) async {
     try {
       final model = SongHiveModel.fromEntity(song);
-      await _hiveService.addSong(model);
+      await _hiveService.createSong(model);
     } catch (e) {
       throw Exception('Failed to create song: $e');
     }
@@ -94,22 +93,11 @@ class SongLocalDataSource implements ISongDataSource {
   Future<SongEntity> updateSong(SongEntity song) async {
     try {
       final updatedModel = SongHiveModel.fromEntity(song);
-      await _hiveService.addSong(updatedModel); // Overwrites existing
+      await _hiveService.createSong(updatedModel); // Overwrites existing
       return updatedModel.toEntity();
     } catch (e) {
       throw Exception('Failed to update song: $e');
     }
   }
 
-  @override
-  Future<String> uploadAudioFile(File audioFile) {
-    // You can implement actual file storage logic here later
-    throw UnimplementedError('uploadAudioFile() is not implemented yet');
-  }
-
-  @override
-  Future<String> uploadCoverImage(File songImageFile) {
-    // You can implement actual file storage logic here later
-    throw UnimplementedError('uploadCoverImage() is not implemented yet');
-  }
 }

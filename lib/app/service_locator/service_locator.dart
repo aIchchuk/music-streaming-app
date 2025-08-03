@@ -24,8 +24,7 @@ import 'package:music_streaming/features/song/domain/use_case/get_song_by_id_use
 import 'package:music_streaming/features/song/domain/use_case/get_song_by_name_usecase.dart';
 import 'package:music_streaming/features/song/domain/use_case/get_trending_song_usecase.dart';
 import 'package:music_streaming/features/song/domain/use_case/update_song_usecase.dart';
-import 'package:music_streaming/features/song/domain/use_case/upload_audio_file_usecase.dart';
-import 'package:music_streaming/features/song/domain/use_case/upload_cover_image_usecase.dart';
+
 import 'package:music_streaming/features/song/presentation/view_model/song_view_model.dart';
 import 'package:music_streaming/features/splash/presentation/view_model/splash_view_model.dart';
 
@@ -171,13 +170,6 @@ Future _initSongModule() async {
     () => UpdateSongUsecase(songRepository: serviceLocator<SongRemoteRepository>())
   );
 
-  serviceLocator.registerFactory(
-    () => UploadAudioFileUsecase(songRepository: serviceLocator<SongRemoteRepository>())
-  );
-
-  serviceLocator.registerFactory(
-    () => UploadCoverImageUsecase(songRepository: serviceLocator<SongRemoteRepository>())
-  );
 
   // View Model
   serviceLocator.registerLazySingleton(
@@ -191,8 +183,6 @@ Future _initSongModule() async {
       getSongByNameUsecase: serviceLocator<GetSongByNameUsecase>(),
       getTrendingSongUsecase: serviceLocator<GetTrendingSongUsecase>(),
       updateSongUsecase: serviceLocator<UpdateSongUsecase>(),
-      uploadAudioFileUsecase: serviceLocator<UploadAudioFileUsecase>(),
-      uploadCoverImageUsecase: serviceLocator<UploadCoverImageUsecase>(),
     ),
   );
 }

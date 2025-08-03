@@ -6,18 +6,13 @@ class SongState extends Equatable {
   final bool isSuccess;
   final List<SongEntity> songList;
   final SongEntity? selectedSong;
-  final String? songImageName;
-  final String? audioFileName;
   final String? errorMessage;
-  
 
   const SongState({
     required this.isLoading,
     required this.isSuccess,
     required this.songList,
     this.selectedSong,
-    this.songImageName,
-    this.audioFileName,
     this.errorMessage,
   });
 
@@ -26,8 +21,6 @@ class SongState extends Equatable {
         isSuccess = false,
         songList = const [],
         selectedSong = null,
-        songImageName = null,
-        audioFileName = null,
         errorMessage = null;
 
   SongState copyWith({
@@ -35,8 +28,6 @@ class SongState extends Equatable {
     bool? isSuccess,
     List<SongEntity>? songList,
     SongEntity? selectedSong,
-    String? songImageName,
-    String? audioFileName,
     String? errorMessage,
   }) {
     return SongState(
@@ -44,8 +35,6 @@ class SongState extends Equatable {
       isSuccess: isSuccess ?? this.isSuccess,
       songList: songList ?? this.songList,
       selectedSong: selectedSong ?? this.selectedSong,
-      songImageName: songImageName ?? this.songImageName,
-      audioFileName: audioFileName ?? this.audioFileName,
       errorMessage: errorMessage,
     );
   }
@@ -56,8 +45,6 @@ class SongState extends Equatable {
         isSuccess,
         songList,
         selectedSong,
-        songImageName,
-        audioFileName,
         errorMessage,
       ];
 }

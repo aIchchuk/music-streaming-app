@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 
 abstract interface class ISongDataSource {
-    Future<List<SongEntity>> getAllSong();
+  Future<List<SongEntity>> getAllSong();
 
   Future<SongEntity> getSongById(String songId);
 
@@ -14,10 +12,6 @@ abstract interface class ISongDataSource {
   Future<SongEntity> updateSong(SongEntity song);
 
   Future<void> deleteSong(String songId);
-
-  Future<String> uploadCoverImage(File songImageFile);
-
-  Future<String> uploadAudioFile(File audioFile);
 
   Future<List<SongEntity>> getFeaturedSong();
 

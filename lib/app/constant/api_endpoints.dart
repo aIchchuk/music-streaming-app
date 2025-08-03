@@ -16,8 +16,8 @@ class ApiEndpoints {
   static const String songFiles = "$baseUrl/songs/";
   static const String coverImages = "$baseUrl/cover-images/";
 
-  static const String uploadCoverImage = "$baseUrl/upload-cover-image";
-  static const String uploadAudioFile = "$baseUrl/upload-audio-file";
+  static const String uploadCoverImage = "$baseUrl/upload-image";
+  static const String uploadAudioFile = "$baseUrl/upload-audio";
 
 
   // ======================== AUTH ========================
@@ -31,16 +31,16 @@ class ApiEndpoints {
   static const String deleteUserById = "$baseUrl/user/deleteUserById/";
 
   // ======================== SONG ========================
-  static const String getAllSongs = "$baseUrl/getAllSong";
-  static const String getSongById = "$baseUrl/getSongById/";
-  static const String getSongByName = "$baseUrl/getSongByName/";
-  static const String createSong = "$baseUrl/createSong";
-  static const String updateSong = "$baseUrl/updateSong/";
-  static const String deleteSong = "$baseUrl/deleteSong/";
-  static const String featuredSongs = "$baseUrl/featuredSong";
-  static const String madeForYouSongs = "$baseUrl/madeForYouSong";
-  static const String trendingSongs = "$baseUrl/trendingSong";
-  static const String convertReel = "$baseUrl/convert-reel";
+  static const String getAllSongs = "$baseUrl/song/getAllSong";
+  static const String getSongById = "$baseUrl/song/getSongById/";
+  static const String getSongByName = "$baseUrl/song/getSongByName/";
+  static const String createSong = "$baseUrl/song/createSong";
+  static const String updateSong = "$baseUrl/song/updateSong/";
+  static const String deleteSong = "$baseUrl/song/deleteSong/";
+  static const String featuredSongs = "$baseUrl/song/featuredSong";
+  static const String madeForYouSongs = "$baseUrl/song/madeForYouSong";
+  static const String trendingSongs = "$baseUrl/song/trendingSong";
+  static const String convertReel = "$baseUrl/song/convert-reel";
 
   // ======================== ALBUM ========================
   static const String getAllAlbums = "$baseUrl/album/getAllAlbum";

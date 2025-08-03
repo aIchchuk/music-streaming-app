@@ -4,10 +4,10 @@ class SongEntity extends Equatable {
   final String? songId;
   final String songName;
   final String artistName;
-  final String? songImage;
-  final String? songImageUrl;
-  final String? audioFile;
-  final String? audioUrl;
+  final String? songImage;         // Optional local file path or URL
+  final String? songImageUrl;      // Optional image URL
+  final String? audioFile;         // Optional local file path or URL
+  final String? audioUrl;          // Optional audio URL
   final String? albumName;
   final String? originalImageFileName;
   final String? originalAudioFileName;
