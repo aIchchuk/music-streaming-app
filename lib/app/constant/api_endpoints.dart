@@ -9,6 +9,8 @@ class ApiEndpoints {
   // For Android Emulator use: 10.0.2.2
   // For iOS Simulator / desktop use: localhost
   static const String serverAddress = "http://10.0.2.2:5000";
+  // static const String serverAddress = "http://localhost:5000";
+
   static const String baseUrl = "$serverAddress";
 
   // ✅ Static file paths (public folder)

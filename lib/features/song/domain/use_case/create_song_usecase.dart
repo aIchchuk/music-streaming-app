@@ -46,11 +46,15 @@ class CreateSongUsecase implements UsecaseWithParams<void, CreateSongParams> {
       songName: params.songName,
       artistName: params.artistName,
       albumName: params.albumName,
-      songImage: null, // We'll assume repo handles upload, so pass null or handle inside repo
-      audioFile: null, // same here
+      songImage: null,
+      audioFile: null,
     );
 
-    // The repository should handle file upload internally using the passed File objects
-    return _songRepository.createSong(songEntity);
+    return _songRepository.createSong(
+      songEntity,
+      songImage: params.songImage,
+      audioFile: params.audioFile,
+    );
   }
+  
 }

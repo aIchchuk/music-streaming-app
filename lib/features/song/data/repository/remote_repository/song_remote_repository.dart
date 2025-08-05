@@ -14,14 +14,15 @@ class SongRemoteRepository implements ISongRepository {
 
   
   @override
-  Future<Either<Failure, void>> createSong(SongEntity song, {File? songImage, File? audioFile}) async{
+  Future<Either<Failure, void>> createSong(SongEntity song, {File? songImage, File? audioFile}) async {
     try {
-      await _songRemoteDataSource.createSong(song);
+      await _songRemoteDataSource.createSong(song, songImage: songImage, audioFile: audioFile);
       return const Right(null);
     } catch (e) {
       return Left(RemoteDatabaseFailure(message: e.toString()));
     }
   }
+
 
   @override
   Future<Either<Failure, void>> deleteSong(String songId) async {

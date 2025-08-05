@@ -2,6 +2,16 @@ import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:music_streaming/core/network/api_service.dart';
 import 'package:music_streaming/core/network/hive_service.dart';
+import 'package:music_streaming/features/album/data/data_source/remote_data_source/album_remote_data_source.dart';
+import 'package:music_streaming/features/album/data/repository/remote_repository/album_remote_repository.dart';
+import 'package:music_streaming/features/album/domain/use_case/add_song_to_album_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/create_album_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/delete_album_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/get_album_by_id_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/get_all_album_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/remove_song_from_album_usecase.dart';
+import 'package:music_streaming/features/album/domain/use_case/update_album_usecase.dart';
+import 'package:music_streaming/features/album/presentation/view_model/album_view_model.dart';
 import 'package:music_streaming/features/auth/data/data_source/local_data_source/user_local_data_source.dart';
 import 'package:music_streaming/features/auth/data/data_source/remote_data_source/user_remote_data_source.dart';
 import 'package:music_streaming/features/auth/data/repository/local_repository/user_local_repository.dart';
@@ -39,9 +49,9 @@ Future initDependencies() async{
   // await _initHomeModule();
   await _initSongModule();
   // await _initPlaylistsModule();
-  // await _initAlbumModule();
+  await _initAlbumModule();
 
-  // await _initHomeModule();
+  await _initHomeModule();
 }
 
 Future<void> _initHiveService() async {
@@ -185,4 +195,63 @@ Future _initSongModule() async {
       updateSongUsecase: serviceLocator<UpdateSongUsecase>(),
     ),
   );
+}
+
+Future _initAlbumModule() async {
+  // Data Source
+  serviceLocator.registerFactory(() =>
+    AlbumRemoteDataSource(apiService: serviceLocator<ApiService>()),
+  );
+
+  // Repository
+  serviceLocator.registerFactory(() =>
+    AlbumRemoteRepository(albumRemoteDataSource: serviceLocator<AlbumRemoteDataSource>()),
+  );
+
+  // UseCase
+  serviceLocator.registerFactory(() =>
+    CreateAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    DeleteAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    UpdateAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    GetAlbumByIdUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    AddSongToAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    RemoveSongFromAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  serviceLocator.registerFactory(() =>
+    GetAllAlbumUsecase(albumRepository: serviceLocator<AlbumRemoteRepository>()),
+  );
+
+  // ViewModel
+  serviceLocator.registerLazySingleton(
+    () => AlbumViewModel(
+      createAlbumUsecase: serviceLocator<CreateAlbumUsecase>(),
+      deleteAlbumUsecase: serviceLocator<DeleteAlbumUsecase>(),
+      getAllAlbumUsecase: serviceLocator<GetAllAlbumUsecase>(),
+      getAlbumByIdUsecase: serviceLocator<GetAlbumByIdUsecase>(),
+      updateAlbumUsecase: serviceLocator<UpdateAlbumUsecase>(), 
+      addSongToAlbumUsecase: serviceLocator<AddSongToAlbumUsecase>(),
+      removeSongFromAlbumUsecase: serviceLocator<RemoveSongFromAlbumUsecase>(),
+    ),
+  );
+}
+
+
+Future _initHomeModule () async {
+  // 
 }

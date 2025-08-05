@@ -4,14 +4,14 @@ import 'package:music_streaming/core/error/failure.dart';
 import 'package:music_streaming/features/album/domain/entity/album_entity.dart';
 import 'package:music_streaming/features/album/domain/repository/album_repository.dart';
 
-class GetAllAlbumUsecase implements UsecaseWithoutParams<List<AlbumEntity>> {
+class UpdateAlbumUsecase implements UsecaseWithParams<AlbumEntity, AlbumEntity> {
   final IAlbumRepository _albumRepository;
 
-  GetAllAlbumUsecase({required IAlbumRepository albumRepository})
+  UpdateAlbumUsecase({required IAlbumRepository albumRepository})
       : _albumRepository = albumRepository;
 
   @override
-  Future<Either<Failure, List<AlbumEntity>>> call() {
-    return _albumRepository.getAllAlbum();
+  Future<Either<Failure, AlbumEntity>> call(AlbumEntity album) {
+    return _albumRepository.updateAlbum(album);
   }
 }

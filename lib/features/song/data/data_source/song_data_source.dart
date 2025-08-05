@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 
 abstract interface class ISongDataSource {
@@ -7,7 +9,7 @@ abstract interface class ISongDataSource {
 
   Future<List<SongEntity>> getSongByName(String songName);
 
-  Future<void> createSong(SongEntity song);
+  Future<void> createSong(SongEntity song, {File? songImage, File? audioFile});
 
   Future<SongEntity> updateSong(SongEntity song);
 

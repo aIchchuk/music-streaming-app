@@ -1,146 +1,165 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_streaming/app/constant/api_endpoints.dart';
+import 'package:music_streaming/features/album/presentation/view_model/album_event.dart';
+import 'package:music_streaming/features/album/presentation/view_model/album_state.dart';
+import 'package:music_streaming/features/album/presentation/view_model/album_view_model.dart';
 
-class AlbumView extends StatefulWidget {
+class AlbumView extends StatelessWidget {
   const AlbumView({super.key});
 
   @override
-  State<AlbumView> createState() => _AlbumViewState();
-}
-
-class _AlbumViewState extends State<AlbumView> {
-  bool showCreateForm = false;
-
-  final _formKey = GlobalKey<FormState>();
-  final _albumNameController = TextEditingController();
-  final _artistNameController = TextEditingController();
-  final _releaseYearController = TextEditingController();
-  final _songsController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    // Fetch all albums when the widget builds
+    context.read<AlbumViewModel>().add(const GetAllAlbumEvent());
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
-      body: Container(
-        decoration: const BoxDecoration(
-          
+      backgroundColor: const Color(0xFF0F0F0F),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: BlocBuilder<AlbumViewModel, AlbumState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator(color: Colors.greenAccent));
+              }
+
+              if (state.errorMessage != null) {
+                return Center(
+                  child: Text(
+                    'Error: ${state.errorMessage}',
+                    style: const TextStyle(color: Colors.redAccent),
+                  ),
+                );
+              }
+
+              if (state.albumList.isEmpty) {
+                return const Center(
+                  child: Text('No albums found.', style: TextStyle(color: Colors.white)),
+                );
+              }
+
+              return ListView(
+                children: [
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Recommended Albums',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildAlbumSection(state.albumList),
+
+                  const SizedBox(height: 24),
+                  const Text(
+                    'Your Library',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  const SizedBox(height: 8),
+                  _buildAlbumSection(state.albumList.reversed.toList()),
+
+                  const SizedBox(height: 24),
+                  _buildCallToActionCard(),
+                ],
+              );
+            },
+          ),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
-        child: showCreateForm ? _buildCreateForm(screenWidth) : _buildInitialButtons(),
       ),
     );
   }
 
-  Widget _buildInitialButtons() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              // Play album logic here (optional)
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.deepOrange,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text('View Album', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                showCreateForm = true;
-              });
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.deepOrange,
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            ),
-            child: const Text('Create Album', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+  Widget _buildAlbumSection(List albumList) {
+    return SizedBox(
+      height: 180,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: albumList.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 14),
+        itemBuilder: (context, index) {
+          final album = albumList[index];
+          return _buildAlbumCard(album.albumName, album.albumImageUrl);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAlbumCard(String albumName, String? imageUrl) {
+    final image = (imageUrl != null && imageUrl.isNotEmpty)
+        ? (imageUrl.startsWith('http')
+            ? imageUrl
+            : '${ApiEndpoints.serverAddress}$imageUrl')
+        : null;
+
+    return Container(
+      width: 140,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        color: Colors.grey.shade900,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.6),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
+        image: image != null
+            ? DecorationImage(
+                image: NetworkImage(image),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.35), BlendMode.darken),
+              )
+            : null,
+      ),
+      child: Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Text(
+            albumName,
+            style: TextStyle(
+              color: Colors.white.withOpacity(0.95),
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildCreateForm(double screenWidth) {
-    return Center(
-      child: SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: screenWidth < 400 ? screenWidth * 0.9 : 400,
-          ),
-          child: Form(
-            key: _formKey,
+  Widget _buildCallToActionCard() {
+    return Container(
+      margin: const EdgeInsets.only(top: 8, bottom: 32),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.greenAccent.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.greenAccent.withOpacity(0.4)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.add_circle_outline, color: Colors.greenAccent, size: 32),
+          const SizedBox(width: 16),
+          Expanded(
             child: Column(
-              children: [
-                const SizedBox(
-                  height: 120,
-                  width: 120,
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/songs.png'),
-                  ),
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                Text(
+                  'Create Your Album',
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 30),
-                _buildTextField(_albumNameController, 'Album Name'),
-                const SizedBox(height: 20),
-                _buildTextField(_artistNameController, 'Artist Name'),
-                const SizedBox(height: 20),
-                _buildTextField(_releaseYearController, 'Release Year'),
-                const SizedBox(height: 20),
-                _buildTextField(_songsController, 'Songs'),
-                const SizedBox(height: 30),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Album saved!')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.deepOrange,
-                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 15),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: const Text('Save Album', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: 4),
+                Text(
+                  'Upload tracks and build your own collection!',
+                  style: TextStyle(color: Colors.white70, fontSize: 14),
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hint) {
-    return TextFormField(
-      controller: controller,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: const TextStyle(color: Colors.white70),
-        filled: true,
-        fillColor: Colors.white.withOpacity(0.1),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16),
-          borderSide: BorderSide.none,
-        ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
-      ),
-      // validator: (value) {
-      //   if (value == null || value.isEmpty) {
-      //     return 'Please enter $hint';
-      //   }
-      //   return null;
-      // },
     );
   }
 }

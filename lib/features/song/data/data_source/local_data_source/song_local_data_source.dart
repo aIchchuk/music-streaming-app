@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:music_streaming/core/network/hive_service.dart';
 import 'package:music_streaming/features/song/data/data_source/song_data_source.dart';
 import 'package:music_streaming/features/song/data/model/song_hive_model.dart';
@@ -11,7 +13,7 @@ class SongLocalDataSource implements ISongDataSource {
       : _hiveService = hiveService;
 
   @override
-  Future<void> createSong(SongEntity song) async {
+  Future<void> createSong(SongEntity song, {File? songImage, File? audioFile}) async {
     try {
       final model = SongHiveModel.fromEntity(song);
       await _hiveService.createSong(model);

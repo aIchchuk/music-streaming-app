@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:music_streaming/features/song/domain/entity/song_entity.dart';
 
+
 sealed class SongEvent extends Equatable {
   const SongEvent();
 

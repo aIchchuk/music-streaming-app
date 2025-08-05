@@ -14,6 +14,7 @@ class ApiService {
       ..options.connectTimeout = ApiEndpoints.connectionTimeout
       ..options.receiveTimeout = ApiEndpoints.receiveTimeout
       ..interceptors.add(DioErrorInterceptor())
+      ..interceptors.add(UrlFixInterceptor(ApiEndpoints.baseUrl)) // Add here
       ..interceptors.add(
         PrettyDioLogger(
           requestHeader: true,
@@ -26,6 +27,7 @@ class ApiService {
         'Content-Type': 'application/json',
       };
   }
+
 
   Future<void> init() async {}
 }

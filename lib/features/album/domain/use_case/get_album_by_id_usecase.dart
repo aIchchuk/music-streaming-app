@@ -4,18 +4,14 @@ import 'package:music_streaming/core/error/failure.dart';
 import 'package:music_streaming/features/album/domain/entity/album_entity.dart';
 import 'package:music_streaming/features/album/domain/repository/album_repository.dart';
 
-class GetAlbumByIdParams {
-  final String albumId;
-  GetAlbumByIdParams({required this.albumId});
-}
+class GetAlbumByIdUsecase implements UsecaseWithParams<AlbumEntity, String> {
+  final IAlbumRepository _albumRepository;
 
-class GetAlbumByIdUsecase implements UsecaseWithParams<AlbumEntity, GetAlbumByIdParams> {
-  final IAlbumRepository iAlbumRepository;
-
-  GetAlbumByIdUsecase({required this.iAlbumRepository});
+  GetAlbumByIdUsecase({required IAlbumRepository albumRepository})
+      : _albumRepository = albumRepository;
 
   @override
-  Future<Either<Failure, AlbumEntity>> call(GetAlbumByIdParams params) {
-    return iAlbumRepository.getAlbumById(params.albumId);
+  Future<Either<Failure, AlbumEntity>> call(String albumId) {
+    return _albumRepository.getAlbumById(albumId);
   }
 }

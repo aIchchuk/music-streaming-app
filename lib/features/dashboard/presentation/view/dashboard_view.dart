@@ -20,15 +20,39 @@ class DashboardView extends StatelessWidget {
         builder: (context, state) {
           return BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Colors.black,
+            backgroundColor: const Color(0xFF121212), // dark background consistent with login/register
             selectedItemColor: spotifyGreen,
-            unselectedItemColor: Colors.grey,
+            unselectedItemColor: Colors.white54,
+            showUnselectedLabels: true,
+            selectedLabelStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+            ),
+            unselectedLabelStyle: const TextStyle(
+              fontSize: 12,
+            ),
+            elevation: 10,
             items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'Home'),
-              BottomNavigationBarItem(icon: Icon(Icons.music_note), label: 'Songs'),
-              // BottomNavigationBarItem(icon: Icon(Icons.queue_music), label: 'Playlists'),
-              BottomNavigationBarItem(icon: Icon(Icons.album), label: 'Album'),
-              BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: 'Account'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.dashboard_outlined),
+                activeIcon: Icon(Icons.dashboard),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.music_note_outlined),
+                activeIcon: Icon(Icons.music_note),
+                label: 'Songs',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.album_outlined),
+                activeIcon: Icon(Icons.album),
+                label: 'Album',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.account_circle_outlined),
+                activeIcon: Icon(Icons.account_circle),
+                label: 'Profile',
+              ),
             ],
             currentIndex: state.selectedIndex,
             onTap: (index) {

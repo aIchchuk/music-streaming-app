@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:music_streaming/features/splash/presentation/view_model/splash_view_model.dart';
 
-
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
 
@@ -18,7 +17,6 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   void initState() {
     super.initState();
 
-    // Initialize bounce animation
     _controller = AnimationController(
       duration: const Duration(seconds: 1),
       vsync: this,
@@ -31,7 +29,6 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
       ),
     );
 
-    // Call init on the view model
     context.read<SplashViewModel>().init(context);
   }
 
@@ -45,13 +42,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepOrange, Colors.redAccent],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        color: Colors.black, // solid black background
         child: Center(
           child: AnimatedBuilder(
             animation: _controller,
@@ -61,10 +52,26 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                 children: [
                   Transform.translate(
                     offset: Offset(0, -_bounceAnimation.value),
-                    child: const Icon(
-                      Icons.music_note,
-                      size: 100,
-                      color: Colors.white,
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.greenAccent.shade400, // circle background color
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.greenAccent.withOpacity(0.6),
+                            blurRadius: 10,
+                            spreadRadius: 1,
+                            offset: Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.music_note,
+                        size: 60,
+                        color: Colors.black, // icon color contrasting with green bg
+                      ),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -75,7 +82,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                       style: TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.greenAccent,
                       ),
                     ),
                   ),
@@ -83,8 +90,8 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                   const SizedBox(
                     width: 180,
                     child: LinearProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      backgroundColor: Colors.white30,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.greenAccent),
+                      backgroundColor: Colors.white12,
                       minHeight: 5,
                     ),
                   ),

@@ -1,4 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:music_streaming/features/song/presentation/view_model/song_view_model.dart';
+import 'package:music_streaming/features/song/presentation/view_model/song_state.dart';
+import 'package:music_streaming/app/constant/api_endpoints.dart';
+
+// Reuse your resolveImageUrl from earlier for network images
+String resolveImageUrl(String? imageUrl) {
+  if (imageUrl == null || imageUrl.isEmpty) return '';
+
+  if (imageUrl.startsWith('http')) {
+    if (imageUrl.contains('localhost')) {
+      return imageUrl.replaceFirst('localhost', '10.0.2.2');
+    }
+    return imageUrl;
+  }
+  final cleanedPath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
+  return '${ApiEndpoints.baseUrl}/$cleanedPath';
+}
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -6,74 +24,83 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 15, 15),
+      backgroundColor: const Color(0xFF0F0F0F),
       body: SafeArea(
-        child: ListView(
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          children: [
-            // Top Filter Row (All, Music, Podcasts)
-            Row(
-              children: [
-                _buildFilterChip('A', isCircle: true),
-                const SizedBox(width: 8),
-                _buildFilterChip('All', selected: true),
-                const SizedBox(width: 8),
-                _buildFilterChip('Music'),
-                const SizedBox(width: 8),
-                _buildFilterChip('Podcasts'),
-              ],
-            ),
-            const SizedBox(height: 20),
+          child: BlocBuilder<SongViewModel, SongState>(
+            builder: (context, state) {
+              if (state.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state.errorMessage != null) {
+                return Center(
+                  child: Text(
+                    'Error: ${state.errorMessage}',
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                );
+              }
 
-            // Recently Played
-            _buildSectionTitle("Recently Played"),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 100,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildTile("iGRES", image: Icons.music_note),
-                  _buildTile("C418", image: Icons.album),
-                  _buildTile("Daily Mix 1", image: Icons.play_circle),
-                  _buildTile("Daily Mix 3", image: Icons.play_circle),
-                  _buildTile("Cigarettes...", image: Icons.smoke_free),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+              // Extract unique albums from songs
+              final albums = <String, String?>{};
+              for (var song in state.songList) {
+                final albumName = song.albumName ?? 'Unknown Album';
+                if (!albums.containsKey(albumName)) {
+                  albums[albumName] = song.songImageUrl;
+                }
+              }
 
-            // Artists You Like
-            _buildSectionTitle("Artists you like"),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 180,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
+              return ListView(
                 children: [
-                  _buildCard("Peso Pluma Mix"),
-                  _buildCard("Clave Especial Mix"),
-                  _buildCard("Øneheart"),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+                  // Filter Row (you can customize or connect to filter logic)
+                  Row(
+                    children: [
+                      _buildFilterChip('A', isCircle: true),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('All', selected: true),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Music'),
+                      const SizedBox(width: 8),
+                      _buildFilterChip('Podcasts'),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
 
-            // Albums featuring songs you like
-            _buildSectionTitle("Albums featuring songs you like"),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 180,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  _buildCard("Crystal Skies", imgAsset: 'assets/crystal_skies.jpg'),
-                  _buildCard("Minecraft - Volume Alpha", imgAsset: 'assets/minecraft.jpg'),
-                  _buildCard("Stray", imgAsset: 'assets/stray.jpg'),
+                  _buildSectionTitle('All Songs'),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 180,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: state.songList.length,
+                      itemBuilder: (context, index) {
+                        final song = state.songList[index];
+                        final image = resolveImageUrl(song.songImageUrl);
+                        return _buildSongCard(song.songName, song.artistName, image);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  _buildSectionTitle('All Albums'),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 180,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: albums.length,
+                      itemBuilder: (context, index) {
+                        final albumName = albums.keys.elementAt(index);
+                        final albumImage = resolveImageUrl(albums[albumName]);
+                        return _buildAlbumCard(albumName, albumImage);
+                      },
+                    ),
+                  ),
                 ],
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         ),
       ),
     );
@@ -106,52 +133,87 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildTile(String title, {IconData? image}) {
+  Widget _buildSongCard(String songName, String artistName, String imageUrl) {
     return Container(
-      width: 100,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(8),
+      width: 140,
+      margin: const EdgeInsets.only(right: 14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(image ?? Icons.music_note, size: 32, color: Colors.white),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 12, color: Colors.white),
-          ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.6),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          )
         ],
+        image: imageUrl.isNotEmpty
+            ? DecorationImage(
+                image: NetworkImage(imageUrl),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
+              )
+            : null,
+        color: Colors.grey.shade900,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                songName,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                artistName,
+                style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 14),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
-  Widget _buildCard(String title, {String? imgAsset}) {
+  Widget _buildAlbumCard(String albumName, String imageUrl) {
     return Container(
       width: 140,
-      margin: const EdgeInsets.only(right: 12),
+      margin: const EdgeInsets.only(right: 14),
       decoration: BoxDecoration(
-        color: Colors.grey.shade900,
-        borderRadius: BorderRadius.circular(12),
-        image: imgAsset != null
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          )
+        ],
+        image: imageUrl.isNotEmpty
             ? DecorationImage(
-                image: AssetImage(imgAsset),
+                image: NetworkImage(imageUrl),
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken),
+                colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.4), BlendMode.darken),
               )
             : null,
+        color: Colors.grey.shade900,
       ),
       child: Align(
         alignment: Alignment.bottomLeft,
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           child: Text(
-            title,
-            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            albumName,
+            style: TextStyle(color: Colors.white.withOpacity(0.9), fontWeight: FontWeight.bold, fontSize: 16),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ),

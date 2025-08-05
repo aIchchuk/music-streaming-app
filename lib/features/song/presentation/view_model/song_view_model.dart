@@ -12,6 +12,7 @@ import 'package:music_streaming/features/song/domain/use_case/update_song_usecas
 import 'package:music_streaming/features/song/presentation/view_model/song_event.dart';
 import 'package:music_streaming/features/song/presentation/view_model/song_state.dart';
 
+
 class SongViewModel extends Bloc<SongEvent, SongState> {
   final GetAllSongUsecase getAllSongUsecase;
   final CreateSongUsecase createSongUsecase;
@@ -48,13 +49,29 @@ class SongViewModel extends Bloc<SongEvent, SongState> {
   }
 
   Future<void> _onGetAllSong(GetAllSongEvent event, Emitter<SongState> emit) async {
-    emit(state.copyWith(isLoading: true));
+    emit(state.copyWith(
+      isLoading: false,
+      errorMessage: null,
+    ));
+
     final result = await getAllSongUsecase();
+
     result.fold(
-      (failure) => emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
-      (songs) => emit(state.copyWith(isLoading: false, isSuccess: true, songList: songs)),
+      (failure) => emit(state.copyWith(
+        isLoading: false,
+        errorMessage: failure.message,
+        hasFetchedSongs: false,
+      )),
+      (songs) => emit(state.copyWith(
+        isLoading: false,
+        isSuccess: true,
+        songList: songs,
+        errorMessage: null,
+        hasFetchedSongs: true,
+      )),
     );
   }
+
 
   Future<void> _onCreateSong(CreateSongEvent event, Emitter<SongState> emit) async {
     emit(state.copyWith(isLoading: true));
